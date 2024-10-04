@@ -2,10 +2,30 @@ import { useState } from "react";
 import { fetchAll } from "./fetchDatas";
 
 function App() {
-  const [showById, setShowById] = useState(true);
-  const [showCreate, setShowCreate] = useState(true);
-  const [showUpdate, setShowUpdate] = useState(true);
-  const [showErase, setShowErase] = useState(true);
+  const [formType, setFormType] = useState("getAll");
+  const [formData, setFormData] = useState({
+    id: "",
+    firstName: "",
+    city: "",
+    age: "",
+    gender: "",
+  });
+
+  const mock = [
+    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+  ];
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const getAll = async () => {
     console.log("get all");
@@ -14,31 +34,11 @@ function App() {
     console.log(data);
   };
 
-  const getById = () => {
-    setShowById(true);
-    setShowCreate(false);
-    setShowUpdate(false);
-    setShowErase(false);
-  };
-
-  const createPerson = () => {
-    setShowById(false);
-    setShowCreate(true);
-    setShowUpdate(false);
-    setShowErase(false);
-  };
-
-  const updateById = () => {
-    setShowById(false);
-    setShowCreate(false);
-    setShowUpdate(true);
-    setShowErase(false);
-  };
-  const deleteById = () => {
-    setShowById(false);
-    setShowCreate(false);
-    setShowUpdate(false);
-    setShowErase(true);
+  const formTypes = {
+    getById: ["ID"],
+    create: ["First Name", "City", "Age", "Gender"],
+    update: ["ID", "First Name", "City", "Age", "Gender"],
+    delete: ["ID"],
   };
 
   return (
@@ -60,115 +60,92 @@ function App() {
                 Get All
               </button>
               <button
-                onClick={getById}
+                onClick={() => setFormType("getById")}
                 className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
               >
                 Get By ID
               </button>
               <button
-                onClick={createPerson}
+                onClick={() => setFormType("create")}
                 className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
               >
                 Create Person
               </button>
               <button
-                onClick={updateById}
+                onClick={() => setFormType("update")}
                 className="text-2xl py-1 px-6 rounded-full  hover:bg-[#0B192C]"
               >
                 Update Person
               </button>
               <button
-                onClick={deleteById}
+                onClick={() => setFormType("delete")}
                 className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
               >
                 Delete Person
               </button>
             </div>
+
+            {/* Form based on the selected type */}
             <div className="flex justify-around">
               <div className="text-2xl">
                 <div className="flex flex-col gap-5">
-                  {(showById || showUpdate || showErase) && (
-                    <div>
-                      <span>ID</span>
+                  {formTypes[formType]?.map((field) => (
+                    <div key={field}>
+                      <span>{field}</span>
                     </div>
-                  )}
-                  {(showCreate || showUpdate) && (
-                    <div>
-                      <span>First Name</span>
-                    </div>
-                  )}
-                  {(showCreate || showUpdate) && (
-                    <div>
-                      <span>City</span>
-                    </div>
-                  )}
-                  {(showCreate || showUpdate) && (
-                    <div>
-                      <span>Age</span>
-                    </div>
-                  )}
-                  {(showCreate || showUpdate) && (
-                    <div>
-                      <span>Gender</span>
-                    </div>
-                  )}
+                  ))}
                 </div>
               </div>
               <div className="text-2xl">
                 <form action="" className="flex flex-col gap-5">
-                  {(showById || showUpdate || showErase) && (
-                    <div>
+                  {formTypes[formType]?.map((field) => (
+                    <div key={field}>
                       <input
                         className="px-4 bg-[#3a364a] rounded-md"
                         type="text"
+                        name={field.toLowerCase().replace(" ", "")}
+                        value={formData[field.toLowerCase().replace(" ", "")]}
+                        onChange={handleInputChange}
                       />
                     </div>
-                  )}
-                  {(showCreate || showUpdate) && (
-                    <div>
-                      <input
-                        className="px-4 bg-[#3a364a] rounded-md"
-                        type="text"
-                      />
-                    </div>
-                  )}
-                  {(showCreate || showUpdate) && (
-                    <div>
-                      <input
-                        className="px-4 bg-[#3a364a] rounded-md"
-                        type="text"
-                      />
-                    </div>
-                  )}
-                  {(showCreate || showUpdate) && (
-                    <div>
-                      <input
-                        className="px-4 bg-[#3a364a] rounded-md"
-                        type="text"
-                      />
-                    </div>
-                  )}
-                  {(showCreate || showUpdate) && (
-                    <div>
-                      <input
-                        className="px-4 bg-[#3a364a] rounded-md"
-                        type="text"
-                      />
-                    </div>
-                  )}
+                  ))}
                 </form>
               </div>
             </div>
+
             <div className="mt-8 flex justify-center">
               <button className="bg-[#3a364a] px-6 text-xl rounded-lg py-2">
                 Submit
               </button>
             </div>
           </div>
-          <div className="border rounded-xl grow py-4">
-            <div className="flex flex-col items-center">
-              <h2 className="text-3xl">Log</h2>
-            </div>
+        </div>
+        <div className="border my-8 rounded-xl grow py-4">
+          <div className="flex flex-col items-center">
+            <h2 className="text-3xl">Log</h2>
+          </div>
+          <div className="flex">
+            <table className=" w-full mx-4 text-xl">
+              <tr className="h-12">
+                <th></th>
+                <th className="">ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>City</th>
+              </tr>
+              {mock.map((obj, i) => (
+                <tr className="h-8">
+                  <th>{i + 1}</th>
+                  <th>{obj.id}</th>
+                  <th>{obj.name}</th>
+                  <th>{obj.city}</th>
+                  <th>{obj.gender}</th>
+                  <th>{obj.age}</th>
+                  <td></td>
+                </tr>
+              ))}
+            </table>
           </div>
         </div>
       </div>
