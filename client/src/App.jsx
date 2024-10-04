@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./App.css";
+import { fetchAll } from "./fetchDatas";
 
 function App() {
   const [showById, setShowById] = useState(true);
@@ -7,12 +7,12 @@ function App() {
   const [showUpdate, setShowUpdate] = useState(true);
   const [showErase, setShowErase] = useState(true);
 
-  // const getAll = () => {
-  //   setShowById(false);
-  //   setShowCreate(false);
-  //   setShowUpdate(false);
-  //   setShowErase(false);
-  // };
+  const getAll = async () => {
+    console.log("get all");
+    const res = await fetchAll();
+    const data = await res.json();
+    console.log(data);
+  };
 
   const getById = () => {
     setShowById(true);
@@ -20,7 +20,7 @@ function App() {
     setShowUpdate(false);
     setShowErase(false);
   };
-  
+
   const createPerson = () => {
     setShowById(false);
     setShowCreate(true);
@@ -54,7 +54,7 @@ function App() {
             </div>
             <div className="flex justify-center gap-12 pt-4 pb-10">
               <button
-                // onClick={getAll}
+                onClick={getAll}
                 className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
               >
                 Get All
@@ -77,7 +77,10 @@ function App() {
               >
                 Update Person
               </button>
-              <button onClick={deleteById} className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]">
+              <button
+                onClick={deleteById}
+                className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
+              >
                 Delete Person
               </button>
             </div>
@@ -115,27 +118,42 @@ function App() {
                 <form action="" className="flex flex-col gap-5">
                   {(showById || showUpdate || showErase) && (
                     <div>
-                      <input className="bg-[#3a364a] rounded-md" type="text" />
+                      <input
+                        className="px-4 bg-[#3a364a] rounded-md"
+                        type="text"
+                      />
                     </div>
                   )}
                   {(showCreate || showUpdate) && (
                     <div>
-                      <input className="bg-[#3a364a] rounded-md" type="text" />
+                      <input
+                        className="px-4 bg-[#3a364a] rounded-md"
+                        type="text"
+                      />
                     </div>
                   )}
                   {(showCreate || showUpdate) && (
                     <div>
-                      <input className="bg-[#3a364a] rounded-md" type="text" />
+                      <input
+                        className="px-4 bg-[#3a364a] rounded-md"
+                        type="text"
+                      />
                     </div>
                   )}
                   {(showCreate || showUpdate) && (
                     <div>
-                      <input className="bg-[#3a364a] rounded-md" type="text" />
+                      <input
+                        className="px-4 bg-[#3a364a] rounded-md"
+                        type="text"
+                      />
                     </div>
                   )}
                   {(showCreate || showUpdate) && (
                     <div>
-                      <input className="bg-[#3a364a] rounded-md" type="text" />
+                      <input
+                        className="px-4 bg-[#3a364a] rounded-md"
+                        type="text"
+                      />
                     </div>
                   )}
                 </form>
