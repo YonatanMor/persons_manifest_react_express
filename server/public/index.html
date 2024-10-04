@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>My Server</h1>
+    <div class="form-container">
+      <form>
+        <div>
+          <button class="all-persons" id="getAllPersons">All persons</button>
+        </div>
+        <div>
+          <button class="person-by-id" id="getPersonById">Person by ID</button>
+          <input id="personId" type="text" />
+        </div>
+        <div class="create-person">
+          <button class="create-person-btn" id="createPersonBtn">
+            Create Perso  n
+          </button>
+          <textarea id="createPersonTextarea">
+            {"city":"bat-yam","name":"yoni","age":40,"gender":"male"}</textarea
+          >
+        </div>
+
+        <div class="update-person">
+          <button class="update-person-btn" id="updatePersonBtn">
+            Update Person
+          </button>
+          <textarea id="updatePersonTextarea" placeholder="enter person objet">
+{"id":8,"name":"yoni","age":40,"gender":"male"}</textarea
+          >
+        </div>
+
+        <div class="delete-person">
+          <button class="delete-person-btn" id="deletePersonBtn">
+            Delete Person
+          </button>
+          <input id="personIdToDelete" type="number" size="1" min="1" />
+        </div>
+      </form>
+    </div>
+    <div id="displayPort"></div>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js"></script>
+  </body>
+</html>

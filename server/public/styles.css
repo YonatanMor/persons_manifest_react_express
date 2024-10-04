@@ -1,0 +1,60 @@
+body {
+  background-color: #b7b7b7;
+}
+
+.form-container {
+  width: fit-content;
+  background-color: #4a4947;
+  padding: 16px 16px;
+  margin-bottom: 1rem;
+  border-radius:8px;
+}
+
+button {
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+  width: 240px;
+}
+
+textarea {
+  font-size: 1.5rem;
+  width: 50vw;
+}
+/* 
+.all-persons {
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+  width: 240px;
+}
+
+.person-by-id {
+  font-size: 1.5rem;
+  width: 240px;
+} */
+
+.create-person,
+.update-person {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.create-person-btn,
+.update-person-btn {
+  margin: 0;
+}
+
+input {
+  font-size: 1.5rem;
+}
+
+fieldset {
+  display: inline-block;
+}
+
+#displayPort {
+  background-color: #c4d7ff;
+  padding: 0.5rem;
+  font-size: 1.8rem;
+  color: #414947;
+}
