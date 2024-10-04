@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchAll } from "./fetchDatas";
 
 function App() {
+  const [data, setData] = useState([]);
   const [formType, setFormType] = useState("getAll");
   const [formData, setFormData] = useState({
     id: "",
@@ -12,14 +13,14 @@ function App() {
   });
 
   const mock = [
-    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 456456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 456453456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 4546576456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 4523676456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 4522226456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 455556456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 456488856, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 457776456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
+    { id: 45644343456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
   ];
 
   const handleInputChange = (e) => {
@@ -28,11 +29,14 @@ function App() {
   };
 
   const getAll = async () => {
-    console.log("get all");
     const res = await fetchAll();
     const data = await res.json();
-    console.log(data);
+    setData(data);
   };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const formTypes = {
     getById: ["ID"],
@@ -126,25 +130,29 @@ function App() {
           </div>
           <div className="flex">
             <table className=" w-full mx-4 text-xl">
-              <tr className="h-12">
-                <th></th>
-                <th className="">ID</th>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Gender</th>
-                <th>City</th>
-              </tr>
-              {mock.map((obj, i) => (
-                <tr className="h-8">
-                  <th>{i + 1}</th>
-                  <th>{obj.id}</th>
-                  <th>{obj.name}</th>
-                  <th>{obj.city}</th>
-                  <th>{obj.gender}</th>
-                  <th>{obj.age}</th>
-                  <td></td>
+              <thead>
+                <tr className="h-12">
+                  <th></th>
+                  <th className="">ID</th>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>City</th>
                 </tr>
-              ))}
+              </thead>
+              <tbody>
+                {data.map((obj, i) => (
+                  <tr key={obj.id} className="h-8">
+                    <th>{i + 1}</th>
+                    <th>{obj._id}</th>
+                    <th>{obj.name}</th>
+                    <th>{obj.city}</th>
+                    <th>{obj.gender}</th>
+                    <th>{obj.age}</th>
+                    <td></td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
         </div>

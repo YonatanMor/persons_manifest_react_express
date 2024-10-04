@@ -10,7 +10,7 @@ export const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const persons = await getAllPersons({}, { _id: 0 });
+    const persons = await getAllPersons({});
     res.json(persons);
   } catch (err) {
     console.error(err);

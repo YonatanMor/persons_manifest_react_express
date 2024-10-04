@@ -2,6 +2,7 @@ import Person from "../models/personModel.js";
 
 //get All
 export const allPers = (filters, projection) => {
+  // return Person.find();
   return Person.find(filters, projection);
 };
 
