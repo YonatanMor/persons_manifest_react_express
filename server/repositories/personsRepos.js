@@ -2,28 +2,51 @@ import Person from "../models/personModel.js";
 
 //get All
 export const allPers = (filters, projection) => {
-  // return Person.find();
-  return Person.find(filters, projection);
+  try {
+    return Person.find(filters, projection);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 // get person by id
 export const getById = (id) => {
-  return Person.findById(id);
+  try {
+    return Person.findById(id);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 // create
-export const addPers = (obj) => {
-  const per = new Person(obj);
-  return per.save();
+export const addPers = (persObj) => {
+  try {
+    const createdPers = new Person(persObj);
+    const savedPers = createdPers.save();
+    return savedPers;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 // update
-export const updatePers = (id, obj) => {
-  const per = new Person(obj);
-  return Person.findByIdAndUpdate(id, obj);
+export const updatePers = (data) => {
+  const { id, ...persObj } = data;
+  try {
+    return Person.findByIdAndUpdate(id, persObj, { new: true });
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 // Delete
-export const deletePers = (id) => {
-  return Person.findByIdAndDelete(id);
+export const deletePers = async (id) => {
+  console.log(id)
+  try {
+    const deletedPers = await Person.findByIdAndDelete(id);
+    console.log(deletedPers);
+    return deletedPers;
+  } catch (err) {
+    console.error(err);
+  }
 };

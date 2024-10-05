@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  createPerson,
   deletePerson,
   getAllPersons,
   getPersonById,
@@ -20,12 +21,8 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-
-    console.log("dssss");
-    console.log(id);
     const person = await getPersonById(id);
-    console.log(person);
-    res.json(person);
+    res.json([person]);
   } catch (err) {
     console.error(err);
   }
@@ -33,24 +30,24 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const persObj = req.body;
-  createPerson(persObj);
-  const persons = await getAllPersons({}, { _id: 0 });
-  res.json(persons);
+  const newPers = await createPerson(persObj);
+  res.json(newPers);
 });
 
-router.put("/", async(req, res) => {
-  const data   = req.body;
-  updatePerson(persObj);
-  // res.json(presss);
+router.put("/", async (req, res) => {
+  const persObj = req.body;
+  const updatedPers = await updatePerson(persObj);
+  res.json(updatedPers);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  const persss = deletePerson(id);
+  console.log(id);
+  const deletedPers = await deletePerson(id);
   // const index = persons.findIndex((pers) => pers.id === +id);
   // if (index !== -1) {
   //   persons.splice(index, 1);
   //   return res.json(persons);
   // }
-  return res.json(persss);
+  return res.json(deletedPers);
 });

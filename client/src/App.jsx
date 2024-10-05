@@ -1,5 +1,11 @@
-import { useEffect, useState } from "react";
-import { fetchAll, fetchById } from "./fetchDatas";
+import { useState } from "react";
+import {
+  fetchAll,
+  fetchById,
+  fetchCreated,
+  fetchDeleted,
+  fetchUpdated,
+} from "./fetchDatas";
 // change font
 
 function App() {
@@ -7,7 +13,7 @@ function App() {
   const [formType, setFormType] = useState("getAll");
   const [formData, setFormData] = useState({
     id: "",
-    firstName: "",
+    firstname: "",
     city: "",
     age: "",
     gender: "",
@@ -15,15 +21,25 @@ function App() {
 
   const formTypes = {
     getAll: [],
-    getById: ["ID"],
-    create: ["First Name", "City", "Age", "Gender"],
-    update: ["ID", "First Name", "City", "Age", "Gender"],
-    delete: ["ID"],
+    getById: [{ name: "ID", type: "string" }],
+    create: [
+      { name: "First Name", type: "string" },
+      { name: "City", type: "string" },
+      { name: "Age", type: "number" },
+      { name: "Gender", type: "string" },
+    ],
+    update: [
+      { name: "ID", type: "string" },
+      { name: "First Name", type: "string" },
+      { name: "City", type: "string" },
+      { name: "Age", type: "number" },
+      { name: "Gender", type: "string" },
+    ],
+    delete: [{ name: "ID", type: "string" }],
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setFormData({ ...formData, [name]: value });
   };
 
@@ -34,16 +50,42 @@ function App() {
     setRenderData(FetchedData);
   };
 
-  const getById = async () => {
-    setFormType("getById");
-    const res = await fetchById();
-    // const FetchedData = await res.json();
-    // setRenderData(FetchedData);
+  const submitForm = async () => {
+    // console.log("submited");
+
+    if (formType === "getById") {
+      const { id } = formData;
+      const res = await fetchById(id);
+      const FetchedData = await res.json();
+      setRenderData(FetchedData);
+    }
+
+    if (formType === "create") {
+      const { firstname, city, age, gender } = formData;
+      const res = await fetchCreated({ firstname, city, age, gender });
+      const FetchedData = await res.json();
+      setRenderData([FetchedData]);
+    }
+
+    if (formType === "update") {
+      const { id, firstname, city, age, gender } = formData;
+      const res = await fetchUpdated({ id, firstname, city, age, gender });
+      const FetchedData = await res.json();
+      setRenderData([FetchedData]);
+    }
+
+    if (formType === "delete") {
+      const { id } = formData;
+      // console.log(id);
+      const res = await fetchDeleted(id);
+      const FetchedData = await res.json();
+      setRenderData([FetchedData]);
+    }
   };
 
-  useEffect(() => {
-    // console.log(renderData);
-  }, [renderData]);
+  // useEffect(() => {
+  //   // console.log(renderData);
+  // }, [renderData]);
 
   return (
     <div className="text-white flex flex-col items-center min-h-screen w-full bg-[#0B192C]">
@@ -64,7 +106,7 @@ function App() {
                 Get All
               </button>
               <button
-                onClick={() => getById()}
+                onClick={() => setFormType("getById")}
                 className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
               >
                 Get By ID
@@ -95,8 +137,8 @@ function App() {
                   <div className="text-2xl">
                     <div className="flex flex-col gap-5">
                       {formTypes[formType]?.map((field) => (
-                        <div key={field}>
-                          <span>{field}</span>
+                        <div key={field.name}>
+                          <span>{field.name}</span>
                         </div>
                       ))}
                     </div>
@@ -104,13 +146,15 @@ function App() {
                   <div className="text-2xl">
                     <form action="" className="flex flex-col gap-5">
                       {formTypes[formType]?.map((field) => (
-                        <div key={field}>
+                        <div key={field.name}>
                           <input
                             className="px-4 w-96 bg-[#3a364a] rounded-md"
-                            type="text"
-                            name={field.toLowerCase().replace(" ", "")}
+                            type={field.type}
+                            name={field.name.toLowerCase().replace(" ", "")}
                             value={
-                              formData[field.toLowerCase().replace(" ", "")]
+                              formData[
+                                field.name.toLowerCase().replace(" ", "")
+                              ]
                             }
                             onChange={handleInputChange}
                           />
@@ -121,7 +165,10 @@ function App() {
                 </div>
                 <div className="mt-8 flex justify-center gap-8">
                   {formTypes[formType][0] && (
-                    <button className="bg-[#3a364a] px-10 text-xl rounded-lg py-2">
+                    <button
+                      onClick={submitForm}
+                      className="bg-[#3a364a] px-10 text-xl rounded-lg py-2"
+                    >
                       Submit
                     </button>
                   )}
