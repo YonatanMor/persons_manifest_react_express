@@ -19,3 +19,7 @@ const PATH = "http://localhost:3400/persons";
 export const fetchAll = () => {
   return fetch(PATH);
 };
+
+export const fetchById = () => {
+  return fetch(PATH);
+};

@@ -12,16 +12,12 @@ function App() {
     gender: "",
   });
 
-  const mock = [
-    { id: 456453456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 4546576456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 4523676456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 4522226456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 455556456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 456488856, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 457776456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-    { id: 45644343456, name: "gdsfg", city: "dsfgds", age: 56, gender: "ddfg" },
-  ];
+  const formTypes = {
+    getById: ["ID"],
+    create: ["First Name", "City", "Age", "Gender"],
+    update: ["ID", "First Name", "City", "Age", "Gender"],
+    delete: ["ID"],
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,16 +30,13 @@ function App() {
     setData(data);
   };
 
+  const getById = () => {
+    fetchById();
+  };
+
   useEffect(() => {
     console.log(data);
   }, [data]);
-
-  const formTypes = {
-    getById: ["ID"],
-    create: ["First Name", "City", "Age", "Gender"],
-    update: ["ID", "First Name", "City", "Age", "Gender"],
-    delete: ["ID"],
-  };
 
   return (
     <div className="text-white flex flex-col items-center min-h-screen w-full bg-[#0B192C]">
@@ -52,7 +45,7 @@ function App() {
           <h1 className=" text-[3rem]">People Manifest</h1>
         </div>
         <div className="flex flex-grow gap-10 mt-10">
-          <div className="border rounded-xl grow py-4">
+          <div className="border rounded-xl grow pt-4 pb-10">
             <div className="flex flex-col items-center">
               <h2 className="text-3xl mb-4">Data Logger</h2>
             </div>
@@ -89,38 +82,42 @@ function App() {
               </button>
             </div>
 
-            {/* Form based on the selected type */}
-            <div className="flex justify-around">
-              <div className="text-2xl">
-                <div className="flex flex-col gap-5">
-                  {formTypes[formType]?.map((field) => (
-                    <div key={field}>
-                      <span>{field}</span>
+            <div className="flex justify-center ">
+              <div className="p-10 bg-[#0B192C] rounded-lg">
+                <div className="gap-32  flex justify-center">
+                  <div className="text-2xl">
+                    <div className="flex flex-col gap-5">
+                      {formTypes[formType]?.map((field) => (
+                        <div key={field}>
+                          <span>{field}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                  <div className="text-2xl">
+                    <form action="" className="flex flex-col gap-5">
+                      {formTypes[formType]?.map((field) => (
+                        <div key={field}>
+                          <input
+                            className="px-4 w-96 bg-[#3a364a] rounded-md"
+                            type="text"
+                            name={field.toLowerCase().replace(" ", "")}
+                            value={
+                              formData[field.toLowerCase().replace(" ", "")]
+                            }
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      ))}
+                    </form>
+                  </div>
+                </div>
+                <div className="mt-8 flex justify-center">
+                  <button className="bg-[#3a364a] px-10 text-xl rounded-lg py-2">
+                    Submit
+                  </button>
                 </div>
               </div>
-              <div className="text-2xl">
-                <form action="" className="flex flex-col gap-5">
-                  {formTypes[formType]?.map((field) => (
-                    <div key={field}>
-                      <input
-                        className="px-4 bg-[#3a364a] rounded-md"
-                        type="text"
-                        name={field.toLowerCase().replace(" ", "")}
-                        value={formData[field.toLowerCase().replace(" ", "")]}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  ))}
-                </form>
-              </div>
-            </div>
-
-            <div className="mt-8 flex justify-center">
-              <button className="bg-[#3a364a] px-6 text-xl rounded-lg py-2">
-                Submit
-              </button>
             </div>
           </div>
         </div>
@@ -132,7 +129,7 @@ function App() {
             <table className=" w-full mx-4 text-xl">
               <thead>
                 <tr className="h-12">
-                  <th></th>
+                  <td></td>
                   <th className="">ID</th>
                   <th>Name</th>
                   <th>Age</th>
@@ -142,13 +139,13 @@ function App() {
               </thead>
               <tbody>
                 {data.map((obj, i) => (
-                  <tr key={obj.id} className="h-8">
-                    <th>{i + 1}</th>
-                    <th>{obj._id}</th>
-                    <th>{obj.name}</th>
-                    <th>{obj.city}</th>
-                    <th>{obj.gender}</th>
-                    <th>{obj.age}</th>
+                  <tr key={obj.id} className="h-8 ">
+                    <td className="text-center">{i + 1}</td>
+                    <td className="text-center">{obj._id}</td>
+                    <td className="text-center">{obj.name}</td>
+                    <td className="text-center">{obj.city}</td>
+                    <td className="text-center">{obj.gender}</td>
+                    <td className="text-center">{obj.age}</td>
                     <td></td>
                   </tr>
                 ))}
