@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchAll } from "./fetchDatas";
 
 function App() {
-  const [data, setData] = useState([]);
+  const [renderData, setRenderData] = useState([]);
   const [formType, setFormType] = useState("getAll");
   const [formData, setFormData] = useState({
     id: "",
@@ -26,8 +26,8 @@ function App() {
 
   const getAll = async () => {
     const res = await fetchAll();
-    const data = await res.json();
-    setData(data);
+    const FetchedData = await res.json();
+    setRenderData(FetchedData);
   };
 
   const getById = () => {
@@ -35,8 +35,8 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    console.log(renderData);
+  }, [renderData]);
 
   return (
     <div className="text-white flex flex-col items-center min-h-screen w-full bg-[#0B192C]">
@@ -112,9 +112,12 @@ function App() {
                     </form>
                   </div>
                 </div>
-                <div className="mt-8 flex justify-center">
+                <div className="mt-8 flex justify-center gap-8">
                   <button className="bg-[#3a364a] px-10 text-xl rounded-lg py-2">
                     Submit
+                  </button>
+                  <button onClick={()=>setRenderData([])} className="bg-[#3a364a] px-10 text-xl rounded-lg py-2">
+                    Clear Table
                   </button>
                 </div>
               </div>
@@ -138,7 +141,7 @@ function App() {
                 </tr>
               </thead>
               <tbody>
-                {data.map((obj, i) => (
+                {renderData.map((obj, i) => (
                   <tr key={obj.id} className="h-8 ">
                     <td className="text-center">{i + 1}</td>
                     <td className="text-center">{obj._id}</td>
