@@ -20,6 +20,6 @@ export const fetchAll = () => {
   return fetch(PATH);
 };
 
-export const fetchById = () => {
+export const fetchById = (id) => {
   return fetch(PATH);
 };

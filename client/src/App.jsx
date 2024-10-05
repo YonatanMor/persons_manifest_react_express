@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchAll } from "./fetchDatas";
+import { fetchAll, fetchById } from "./fetchDatas";
+// change font
 
 function App() {
   const [renderData, setRenderData] = useState([]);
@@ -13,6 +14,7 @@ function App() {
   });
 
   const formTypes = {
+    getAll: [],
     getById: ["ID"],
     create: ["First Name", "City", "Age", "Gender"],
     update: ["ID", "First Name", "City", "Age", "Gender"],
@@ -21,21 +23,26 @@ function App() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(name, value);
     setFormData({ ...formData, [name]: value });
   };
 
   const getAll = async () => {
+    setFormType("getAll");
     const res = await fetchAll();
     const FetchedData = await res.json();
     setRenderData(FetchedData);
   };
 
-  const getById = () => {
-    fetchById();
+  const getById = async () => {
+    setFormType("getById");
+    const res = await fetchById();
+    // const FetchedData = await res.json();
+    // setRenderData(FetchedData);
   };
 
   useEffect(() => {
-    console.log(renderData);
+    // console.log(renderData);
   }, [renderData]);
 
   return (
@@ -51,13 +58,13 @@ function App() {
             </div>
             <div className="flex justify-center gap-12 pt-4 pb-10">
               <button
-                onClick={getAll}
+                onClick={() => getAll()}
                 className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
               >
                 Get All
               </button>
               <button
-                onClick={() => setFormType("getById")}
+                onClick={() => getById()}
                 className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
               >
                 Get By ID
@@ -113,10 +120,15 @@ function App() {
                   </div>
                 </div>
                 <div className="mt-8 flex justify-center gap-8">
-                  <button className="bg-[#3a364a] px-10 text-xl rounded-lg py-2">
-                    Submit
-                  </button>
-                  <button onClick={()=>setRenderData([])} className="bg-[#3a364a] px-10 text-xl rounded-lg py-2">
+                  {formTypes[formType][0] && (
+                    <button className="bg-[#3a364a] px-10 text-xl rounded-lg py-2">
+                      Submit
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setRenderData([])}
+                    className="bg-[#3a364a] px-10 text-xl rounded-lg py-2"
+                  >
                     Clear Table
                   </button>
                 </div>
@@ -142,7 +154,7 @@ function App() {
               </thead>
               <tbody>
                 {renderData.map((obj, i) => (
-                  <tr key={obj.id} className="h-8 ">
+                  <tr key={obj._id} className="h-8 ">
                     <td className="text-center">{i + 1}</td>
                     <td className="text-center">{obj._id}</td>
                     <td className="text-center">{obj.name}</td>
