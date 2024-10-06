@@ -11,10 +11,10 @@ import {
   fetchUpdated,
 } from "./fetchDatas";
 // add note to log : "updated" / "deleted" / "created"
-// fix delete by id
 
 function App() {
   const [renderData, setRenderData] = useState([]);
+  const [showErrMsg, setShowErrMsg] = useState(false);
   const [formType, setFormType] = useState("getAll");
   const [formData, setFormData] = useState({
     id: "",
@@ -79,36 +79,46 @@ function App() {
   const submitForm = async () => {
     if (formType === "getById") {
       const { id } = formData;
-      const res = await fetchById(id);
-      const FetchedData = await res.json();
-      setRenderData(FetchedData);
+      if (id) {
+        const res = await fetchById(id);
+        const FetchedData = await res.json();
+        setRenderData(FetchedData);
+      } else {
+        setShowErrMsg(true);
+      }
     }
 
     if (formType === "create") {
       const { firstname, city, age, gender } = formData;
-      const res = await fetchCreated({ firstname, city, age, gender });
-      const FetchedData = await res.json();
-      setRenderData([FetchedData]);
+      if (firstname && city && age && gender) {
+        const res = await fetchCreated({ firstname, city, age, gender });
+        const FetchedData = await res.json();
+        setRenderData([FetchedData]);
+      }
     }
 
     if (formType === "update") {
       const { id, firstname, city, age, gender } = formData;
-      const res = await fetchUpdated({ id, firstname, city, age, gender });
-      const FetchedData = await res.json();
-      setRenderData([FetchedData]);
+      if (id) {
+        const res = await fetchUpdated({ id, firstname, city, age, gender });
+        const FetchedData = await res.json();
+        setRenderData([FetchedData]);
+      }
     }
 
     if (formType === "delete") {
       const { id } = formData;
-      const res = await fetchDeleted(id);
-      const FetchedData = await res.json();
-      setRenderData([FetchedData]);
+      if (id) {
+        const res = await fetchDeleted(id);
+        const FetchedData = await res.json();
+        setRenderData([FetchedData]);
+      }
     }
     clearForm();
   };
 
   return (
-    <div className="text-white flex flex-col items-center min-h-screen w-full font-Poppins font-extralight  bg-[#0B192C]">
+    <div className="text-white flex flex-col items-center min-h-screen w-full font-Poppins font-extralight bg-[#0B192C]">
       <div className="border rounded-xl bg-[#0d0c22] w-[90%] p-10 mt-4">
         <div className="text-center ">
           <h1 className=" text-[3rem] font-Playwrite">
@@ -123,7 +133,7 @@ function App() {
             <div className="flex justify-center gap-12 pt-4 pb-10">
               <button
                 onClick={() => getAll()}
-                className={`text-2xl py-1 px-6 rounded-full  ${
+                className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "getAll"
                     ? "bg-[#088395]"
                     : "hover:bg-[#a9d4de] hover:text-black"
@@ -213,14 +223,14 @@ function App() {
                     <>
                       <button
                         onClick={clearForm}
-                        className="bg-[#4379F2] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
+                        className="bg-[#4379F2] active:bg-[#437af281] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                       >
                         <AiOutlineClear size={26} />
                         Clear Form
                       </button>
                       <button
                         onClick={submitForm}
-                        className="bg-[#347928] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
+                        className="bg-[#347928] active:bg-[#34792888] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                       >
                         <IoCloudUploadOutline size={26} />
                         Submit
@@ -229,7 +239,7 @@ function App() {
                   )}
                   <button
                     onClick={() => setRenderData([])}
-                    className="bg-[#3A1078] px-10 text-[1.35rem] text-xl rounded-lg py-2 flex justify-center items-center gap-3"
+                    className="bg-[#3A1078] active:bg-[#3a107879] px-10 text-[1.35rem] text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                   >
                     <MdOutlineImagesearchRoller size={26} />
                     Clear Table
