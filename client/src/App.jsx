@@ -27,14 +27,14 @@ function App() {
     create: [
       { name: "First Name", type: "string" },
       { name: "City", type: "string" },
-      { name: "Age", type: "number" },
+      { name: "Age", type: "string" },
       { name: "Gender", type: "string" },
     ],
     update: [
       { name: "ID", type: "string" },
       { name: "First Name", type: "string" },
       { name: "City", type: "string" },
-      { name: "Age", type: "number" },
+      { name: "Age", type: "string" },
       { name: "Gender", type: "string" },
     ],
     delete: [{ name: "ID", type: "string" }],
@@ -42,7 +42,12 @@ function App() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === "age") {
+      const numericValue = value.replace(/[^0-9]/g, "");
+      setFormData({ ...formData, [name]: numericValue });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const getAll = async () => {
