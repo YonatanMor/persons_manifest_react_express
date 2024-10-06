@@ -7,6 +7,8 @@ import {
   fetchUpdated,
 } from "./fetchDatas";
 // change font
+// add bg to selected tab
+// add note to log : "updated" / "deleted" / "created"
 
 function App() {
   const [renderData, setRenderData] = useState([]);
@@ -51,8 +53,6 @@ function App() {
   };
 
   const submitForm = async () => {
-    // console.log("submited");
-
     if (formType === "getById") {
       const { id } = formData;
       const res = await fetchById(id);
@@ -101,31 +101,41 @@ function App() {
             <div className="flex justify-center gap-12 pt-4 pb-10">
               <button
                 onClick={() => getAll()}
-                className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
+                className={`text-2xl py-1 px-6 rounded-full  ${
+                  formType === "getAll" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                }`}
               >
                 Get All
               </button>
               <button
                 onClick={() => setFormType("getById")}
-                className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
+                className={`text-2xl py-1 px-6 rounded-full ${
+                  formType === "getById" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                }`}
               >
                 Get By ID
               </button>
               <button
                 onClick={() => setFormType("create")}
-                className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
+                className={`text-2xl py-1 px-6 rounded-full ${
+                  formType === "create" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                }`}
               >
                 Create Person
               </button>
               <button
                 onClick={() => setFormType("update")}
-                className="text-2xl py-1 px-6 rounded-full  hover:bg-[#0B192C]"
+                className={`text-2xl py-1 px-6 rounded-full ${
+                  formType === "update" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                }`}
               >
                 Update Person
               </button>
               <button
                 onClick={() => setFormType("delete")}
-                className="text-2xl py-1 px-6 rounded-full hover:bg-[#0B192C]"
+                className={`text-2xl py-1 px-6 rounded-full ${
+                  formType === "delete" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                }`}
               >
                 Delete Person
               </button>
