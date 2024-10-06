@@ -42,12 +42,6 @@ router.put("/", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   const deletedPers = await deletePerson(id);
-  // const index = persons.findIndex((pers) => pers.id === +id);
-  // if (index !== -1) {
-  //   persons.splice(index, 1);
-  //   return res.json(persons);
-  // }
   return res.json(deletedPers);
 });

@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { AiOutlineClear } from "react-icons/ai";
+import { IoCloudUploadOutline } from "react-icons/io5";
+import { MdOutlineImagesearchRoller } from "react-icons/md";
+
 import {
   fetchAll,
   fetchById,
@@ -6,9 +10,8 @@ import {
   fetchDeleted,
   fetchUpdated,
 } from "./fetchDatas";
-// change font
-// add bg to selected tab
 // add note to log : "updated" / "deleted" / "created"
+// fix delete by id
 
 function App() {
   const [renderData, setRenderData] = useState([]);
@@ -50,6 +53,16 @@ function App() {
     }
   };
 
+  const clearForm = () => {
+    setFormData({
+      id: "",
+      firstname: "",
+      city: "",
+      age: "",
+      gender: "",
+    });
+  };
+
   const getAll = async () => {
     setFormType("getAll");
     const res = await fetchAll();
@@ -81,22 +94,20 @@ function App() {
 
     if (formType === "delete") {
       const { id } = formData;
-      // console.log(id);
       const res = await fetchDeleted(id);
       const FetchedData = await res.json();
       setRenderData([FetchedData]);
     }
+    clearForm();
   };
 
-  // useEffect(() => {
-  //   // console.log(renderData);
-  // }, [renderData]);
-
   return (
-    <div className="text-white flex flex-col items-center min-h-screen w-full font-Poppins bg-[#0B192C]">
+    <div className="text-white flex flex-col items-center min-h-screen w-full font-Poppins font-extralight  bg-[#0B192C]">
       <div className="border rounded-xl bg-[#0d0c22] w-[90%] p-10 mt-4">
         <div className="text-center ">
-          <h1 className=" text-[3rem] font-Playwrite">People Manifest</h1>
+          <h1 className=" text-[3rem] font-Playwrite">
+            People Manifest Manager
+          </h1>
         </div>
         <div className="flex flex-grow gap-10 mt-10">
           <div className="border rounded-xl grow pt-4 pb-10">
@@ -107,7 +118,9 @@ function App() {
               <button
                 onClick={() => getAll()}
                 className={`text-2xl py-1 px-6 rounded-full  ${
-                  formType === "getAll" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                  formType === "getAll"
+                    ? "bg-[#088395]"
+                    : "hover:bg-[#8bc7d5] hover:text-black"
                 }`}
               >
                 Get All
@@ -115,7 +128,9 @@ function App() {
               <button
                 onClick={() => setFormType("getById")}
                 className={`text-2xl py-1 px-6 rounded-full ${
-                  formType === "getById" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                  formType === "getById"
+                    ? "bg-[#088395]"
+                    : "hover:bg-[#8bc7d5] hover:text-black"
                 }`}
               >
                 Get By ID
@@ -123,7 +138,9 @@ function App() {
               <button
                 onClick={() => setFormType("create")}
                 className={`text-2xl py-1 px-6 rounded-full ${
-                  formType === "create" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                  formType === "create"
+                    ? "bg-[#088395]"
+                    : "hover:bg-[#8bc7d5] hover:text-black"
                 }`}
               >
                 Create Person
@@ -131,7 +148,9 @@ function App() {
               <button
                 onClick={() => setFormType("update")}
                 className={`text-2xl py-1 px-6 rounded-full ${
-                  formType === "update" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                  formType === "update"
+                    ? "bg-[#088395]"
+                    : "hover:bg-[#8bc7d5] hover:text-black"
                 }`}
               >
                 Update Person
@@ -139,7 +158,9 @@ function App() {
               <button
                 onClick={() => setFormType("delete")}
                 className={`text-2xl py-1 px-6 rounded-full ${
-                  formType === "delete" ? "bg-[#626F47]" : "hover:bg-[#0B192C]"
+                  formType === "delete"
+                    ? "bg-[#088395]"
+                    : "hover:bg-[#8bc7d5] hover:text-black"
                 }`}
               >
                 Delete Person
@@ -182,23 +203,26 @@ function App() {
                   {formTypes[formType][0] && (
                     <>
                       <button
-                        onClick={submitForm}
-                        className="bg-[#4379F2] text-[1.35rem] px-10 text-xl rounded-lg py-2"
+                        onClick={clearForm}
+                        className="bg-[#4379F2] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                       >
+                        <AiOutlineClear size={26} />
                         Clear Form
                       </button>
                       <button
                         onClick={submitForm}
-                        className="bg-[#347928] text-[1.35rem] px-10 text-xl rounded-lg py-2"
+                        className="bg-[#347928] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                       >
+                        <IoCloudUploadOutline size={26} />
                         Submit
                       </button>
                     </>
                   )}
                   <button
                     onClick={() => setRenderData([])}
-                    className="bg-[#3A1078] px-10 text-[1.35rem] text-xl rounded-lg py-2"
+                    className="bg-[#3A1078] px-10 text-[1.35rem] text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                   >
+                    <MdOutlineImagesearchRoller size={26} />
                     Clear Table
                   </button>
                 </div>
@@ -208,29 +232,34 @@ function App() {
         </div>
         <div className="border my-8 rounded-xl grow py-4">
           <div className="flex flex-col items-center">
-            <h2 className="text-3xl">Log</h2>
+            <h2 className="text-3xl mb-6">Log</h2>
           </div>
           <div className="flex">
             <table className=" w-full mx-4 text-xl">
               <thead>
-                <tr className="h-12">
-                  <td></td>
-                  <th className="">ID</th>
-                  <th>Name</th>
-                  <th>Age</th>
-                  <th>Gender</th>
-                  <th>City</th>
+                <tr className="h-12 ">
+                  <th></th>
+                  <th className="font-Poppins font-extralight">ID</th>
+                  <th className="font-Poppins font-extralight">Name</th>
+                  <th className="font-Poppins font-extralight">Age</th>
+                  <th className="font-Poppins font-extralight">Gender</th>
+                  <th className="font-Poppins font-extralight">City</th>
                 </tr>
               </thead>
               <tbody>
                 {renderData.map((obj, i) => (
-                  <tr key={obj._id} className="h-8 ">
+                  <tr
+                    key={obj._id}
+                    className={`h-10 ${
+                      i % 2 === 0 ? "bg-[#201d37]" : "bg-[#372c46]"
+                    }`}
+                  >
                     <td className="text-center">{i + 1}</td>
                     <td className="text-center">{obj._id}</td>
                     <td className="text-center">{obj.name}</td>
-                    <td className="text-center">{obj.city}</td>
-                    <td className="text-center">{obj.gender}</td>
                     <td className="text-center">{obj.age}</td>
+                    <td className="text-center">{obj.gender}</td>
+                    <td className="text-center">{obj.city}</td>
                     <td></td>
                   </tr>
                 ))}

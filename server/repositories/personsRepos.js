@@ -1,15 +1,13 @@
 import Person from "../models/personModel.js";
 
-//get All
 export const allPers = (filters, projection) => {
   try {
-    return Person.find(filters, projection);
+    return Person.find(filters);
   } catch (err) {
     console.error(err);
   }
 };
 
-// get person by id
 export const getById = (id) => {
   try {
     return Person.findById(id);
@@ -18,7 +16,6 @@ export const getById = (id) => {
   }
 };
 
-// create
 export const addPers = (persObj) => {
   try {
     const createdPers = new Person(persObj);
@@ -29,7 +26,6 @@ export const addPers = (persObj) => {
   }
 };
 
-// update
 export const updatePers = (data) => {
   const { id, ...persObj } = data;
   try {
@@ -39,12 +35,9 @@ export const updatePers = (data) => {
   }
 };
 
-// Delete
 export const deletePers = async (id) => {
-  console.log(id)
   try {
     const deletedPers = await Person.findByIdAndDelete(id);
-    console.log(deletedPers);
     return deletedPers;
   } catch (err) {
     console.error(err);

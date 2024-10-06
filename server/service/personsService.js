@@ -27,5 +27,4 @@ export const updatePerson = (persObj) => {
 
 export const deletePerson = (id) => {
   return deletePers(id);
-  // return `no such id existed, index=${index}`;
 };
