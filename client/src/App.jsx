@@ -93,10 +93,10 @@ function App() {
   // }, [renderData]);
 
   return (
-    <div className="text-white flex flex-col items-center min-h-screen w-full bg-[#0B192C]">
+    <div className="text-white flex flex-col items-center min-h-screen w-full font-Poppins bg-[#0B192C]">
       <div className="border rounded-xl bg-[#0d0c22] w-[90%] p-10 mt-4">
         <div className="text-center ">
-          <h1 className=" text-[3rem]">People Manifest</h1>
+          <h1 className=" text-[3rem] font-Playwrite">People Manifest</h1>
         </div>
         <div className="flex flex-grow gap-10 mt-10">
           <div className="border rounded-xl grow pt-4 pb-10">
@@ -180,16 +180,24 @@ function App() {
                 </div>
                 <div className="mt-8 flex justify-center gap-8">
                   {formTypes[formType][0] && (
-                    <button
-                      onClick={submitForm}
-                      className="bg-[#3a364a] px-10 text-xl rounded-lg py-2"
-                    >
-                      Submit
-                    </button>
+                    <>
+                      <button
+                        onClick={submitForm}
+                        className="bg-[#4379F2] text-[1.35rem] px-10 text-xl rounded-lg py-2"
+                      >
+                        Clear Form
+                      </button>
+                      <button
+                        onClick={submitForm}
+                        className="bg-[#347928] text-[1.35rem] px-10 text-xl rounded-lg py-2"
+                      >
+                        Submit
+                      </button>
+                    </>
                   )}
                   <button
                     onClick={() => setRenderData([])}
-                    className="bg-[#3a364a] px-10 text-xl rounded-lg py-2"
+                    className="bg-[#3A1078] px-10 text-[1.35rem] text-xl rounded-lg py-2"
                   >
                     Clear Table
                   </button>
