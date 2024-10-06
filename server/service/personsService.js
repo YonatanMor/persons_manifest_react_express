@@ -21,6 +21,11 @@ export const createPerson = (persObj) => {
 };
 
 export const updatePerson = (persObj) => {
+  const defaultVals = getById(persObj.id);
+  const persKeys = Object.keys(persObj);
+  persKeys.forEach((key) =>
+    persObj[key] === "" ? (persObj[key] = defaultVals[key]) : ""
+  );
   const updatedPers = updatePers(persObj);
   return updatedPers;
 };

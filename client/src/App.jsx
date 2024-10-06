@@ -53,6 +53,12 @@ function App() {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      submitForm();
+    }
+  };
+
   const clearForm = () => {
     setFormData({
       id: "",
@@ -120,7 +126,7 @@ function App() {
                 className={`text-2xl py-1 px-6 rounded-full  ${
                   formType === "getAll"
                     ? "bg-[#088395]"
-                    : "hover:bg-[#8bc7d5] hover:text-black"
+                    : "hover:bg-[#a9d4de] hover:text-black"
                 }`}
               >
                 Get All
@@ -130,7 +136,7 @@ function App() {
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "getById"
                     ? "bg-[#088395]"
-                    : "hover:bg-[#8bc7d5] hover:text-black"
+                    : "hover:bg-[#a9d4de] hover:text-black"
                 }`}
               >
                 Get By ID
@@ -140,7 +146,7 @@ function App() {
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "create"
                     ? "bg-[#088395]"
-                    : "hover:bg-[#8bc7d5] hover:text-black"
+                    : "hover:bg-[#a9d4de] hover:text-black"
                 }`}
               >
                 Create Person
@@ -150,7 +156,7 @@ function App() {
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "update"
                     ? "bg-[#088395]"
-                    : "hover:bg-[#8bc7d5] hover:text-black"
+                    : "hover:bg-[#a9d4de] hover:text-black"
                 }`}
               >
                 Update Person
@@ -160,7 +166,7 @@ function App() {
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "delete"
                     ? "bg-[#088395]"
-                    : "hover:bg-[#8bc7d5] hover:text-black"
+                    : "hover:bg-[#a9d4de] hover:text-black"
                 }`}
               >
                 Delete Person
@@ -180,7 +186,10 @@ function App() {
                     </div>
                   </div>
                   <div className="text-2xl">
-                    <form action="" className="flex flex-col gap-5">
+                    <form
+                      onKeyDown={handleKeyDown}
+                      className="flex flex-col gap-5"
+                    >
                       {formTypes[formType]?.map((field) => (
                         <div key={field.name}>
                           <input
