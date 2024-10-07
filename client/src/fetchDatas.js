@@ -5,6 +5,7 @@ export const fetchAll = () => {
 };
 
 export const fetchById = (id) => {
+  console.log(id)
   return fetch(`${PATH}/${id}`);
 };
 

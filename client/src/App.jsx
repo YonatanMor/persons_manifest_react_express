@@ -11,6 +11,9 @@ import {
   fetchUpdated,
 } from "./fetchDatas";
 // add note to log : "updated" / "deleted" / "created"
+// in delete tab when entering an old id the site crach on
+// add promp on wrong id enter: "not a valid id"
+// in update tab display old data and updated data
 
 function App() {
   const [renderData, setRenderData] = useState([]);
@@ -26,25 +29,26 @@ function App() {
 
   const formTypes = {
     getAll: [],
-    getById: [{ name: "ID", type: "string" }],
+    getById: [{ name: "ID", type: "string", require: true }],
     create: [
-      { name: "First Name", type: "string" },
-      { name: "City", type: "string" },
-      { name: "Age", type: "string" },
-      { name: "Gender", type: "string" },
+      { name: "First Name", type: "string", require: true },
+      { name: "City", type: "string", require: true },
+      { name: "Age", type: "string", require: true },
+      { name: "Gender", type: "string", require: true },
     ],
     update: [
-      { name: "ID", type: "string" },
+      { name: "ID", type: "string", require: true },
       { name: "First Name", type: "string" },
       { name: "City", type: "string" },
       { name: "Age", type: "string" },
       { name: "Gender", type: "string" },
     ],
-    delete: [{ name: "ID", type: "string" }],
+    delete: [{ name: "ID", type: "string", require: true }],
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setShowErrMsg(false);
     if (name === "age") {
       const numericValue = value.replace(/[^0-9]/g, "");
       setFormData({ ...formData, [name]: numericValue });
@@ -67,6 +71,26 @@ function App() {
       age: "",
       gender: "",
     });
+    setShowErrMsg(false);
+  };
+
+  const handleTabSelection = (tabName) => {
+    setShowErrMsg(false);
+    if (tabName === "getAll") {
+      getAll();
+    }
+    if (tabName === "getById") {
+      setFormType("getById");
+    }
+    if (tabName === "create") {
+      setFormType("create");
+    }
+    if (tabName === "update") {
+      setFormType("update");
+    }
+    if (tabName === "delete") {
+      setFormType("delete");
+    }
   };
 
   const getAll = async () => {
@@ -82,7 +106,11 @@ function App() {
       if (id) {
         const res = await fetchById(id);
         const FetchedData = await res.json();
-        setRenderData(FetchedData);
+        if (FetchedData[0]) {
+          setRenderData(FetchedData);
+        } else {
+          console.log("wrong ID");
+        }
       } else {
         setShowErrMsg(true);
       }
@@ -94,6 +122,8 @@ function App() {
         const res = await fetchCreated({ firstname, city, age, gender });
         const FetchedData = await res.json();
         setRenderData([FetchedData]);
+      } else {
+        setShowErrMsg(true);
       }
     }
 
@@ -102,7 +132,13 @@ function App() {
       if (id) {
         const res = await fetchUpdated({ id, firstname, city, age, gender });
         const FetchedData = await res.json();
-        setRenderData([FetchedData]);
+        if (FetchedData) {
+          setRenderData([FetchedData]);
+        } else {
+          console.log("wrong id");
+        }
+      } else {
+        setShowErrMsg(true);
       }
     }
 
@@ -111,10 +147,15 @@ function App() {
       if (id) {
         const res = await fetchDeleted(id);
         const FetchedData = await res.json();
-        setRenderData([FetchedData]);
+        if (FetchedData) {
+          setRenderData([FetchedData]);
+        } else {
+          console.log("wrong id");
+        }
+      } else {
+        setShowErrMsg(true);
       }
     }
-    clearForm();
   };
 
   return (
@@ -132,7 +173,8 @@ function App() {
             </div>
             <div className="flex justify-center gap-12 pt-4 pb-10">
               <button
-                onClick={() => getAll()}
+                // onClick={() => getAll()}
+                onClick={() => handleTabSelection("getAll")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "getAll"
                     ? "bg-[#088395]"
@@ -142,7 +184,8 @@ function App() {
                 Get All
               </button>
               <button
-                onClick={() => setFormType("getById")}
+                // onClick={() => setFormType("getById")}
+                onClick={() => handleTabSelection("getById")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "getById"
                     ? "bg-[#088395]"
@@ -152,7 +195,8 @@ function App() {
                 Get By ID
               </button>
               <button
-                onClick={() => setFormType("create")}
+                onClick={() => handleTabSelection("create")}
+                // onClick={() => setFormType("create")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "create"
                     ? "bg-[#088395]"
@@ -162,7 +206,8 @@ function App() {
                 Create Person
               </button>
               <button
-                onClick={() => setFormType("update")}
+                onClick={() => handleTabSelection("update")}
+                // onClick={() => setFormType("update")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "update"
                     ? "bg-[#088395]"
@@ -172,7 +217,8 @@ function App() {
                 Update Person
               </button>
               <button
-                onClick={() => setFormType("delete")}
+                onClick={() => handleTabSelection("delete")}
+                // onClick={() => setFormType("delete")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "delete"
                     ? "bg-[#088395]"
@@ -201,7 +247,7 @@ function App() {
                       className="flex flex-col gap-5"
                     >
                       {formTypes[formType]?.map((field) => (
-                        <div key={field.name}>
+                        <div className="relative" key={field.name}>
                           <input
                             className="px-4 w-96 bg-[#3a364a] rounded-md"
                             type={field.type}
@@ -213,6 +259,11 @@ function App() {
                             }
                             onChange={handleInputChange}
                           />
+                          {field.require && showErrMsg && (
+                            <div className="absolute top-[1px] -left-24 text-lg text-red-500 pointer-events-none">
+                              Required
+                            </div>
+                          )}
                         </div>
                       ))}
                     </form>

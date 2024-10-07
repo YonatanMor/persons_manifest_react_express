@@ -8,6 +8,14 @@ export const allPers = (filters, projection) => {
   }
 };
 
+// export const getById = async (id) => {
+//   try {
+//     const x = await Person.findById(id);
+//     console.log(x);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
 export const getById = (id) => {
   try {
     return Person.findById(id);

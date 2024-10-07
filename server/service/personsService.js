@@ -12,7 +12,10 @@ export const getAllPersons = (filter, projection) => {
 };
 
 export const getPersonById = (id) => {
-  return getById(id);
+  if (id.length === 24) {
+    return getById(id);
+  }
+  return null;
 };
 
 export const createPerson = (persObj) => {
@@ -21,15 +24,22 @@ export const createPerson = (persObj) => {
 };
 
 export const updatePerson = (persObj) => {
-  const defaultVals = getById(persObj.id);
-  const persKeys = Object.keys(persObj);
-  persKeys.forEach((key) =>
-    persObj[key] === "" ? (persObj[key] = defaultVals[key]) : ""
-  );
-  const updatedPers = updatePers(persObj);
-  return updatedPers;
+  const { id } = persObj;
+  if (id.length === 24) {
+    const oldPers = getById(persObj.id);
+    const persKeys = Object.keys(persObj);
+    persKeys.forEach((propName) =>
+      persObj[propName] === "" ? (persObj[propName] = oldPers[propName]) : ""
+    );
+    const updatedPers = updatePers(persObj);
+    return updatedPers;
+  }
+  return null;
 };
 
 export const deletePerson = (id) => {
-  return deletePers(id);
+  if (id.length === 24) {
+    return deletePers(id);
+  }
+  return null;
 };
