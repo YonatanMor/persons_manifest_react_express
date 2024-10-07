@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {
   addPers,
   allPers,
@@ -12,10 +13,10 @@ export const getAllPersons = (filter, projection) => {
 };
 
 export const getPersonById = (id) => {
-  if (id.length === 24) {
-    return getById(id);
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return null;
   }
-  return null;
+  return getById(id);
 };
 
 export const createPerson = (persObj) => {
@@ -25,21 +26,21 @@ export const createPerson = (persObj) => {
 
 export const updatePerson = (persObj) => {
   const { id } = persObj;
-  if (id.length === 24) {
-    const oldPers = getById(persObj.id);
-    const persKeys = Object.keys(persObj);
-    persKeys.forEach((propName) =>
-      persObj[propName] === "" ? (persObj[propName] = oldPers[propName]) : ""
-    );
-    const updatedPers = updatePers(persObj);
-    return updatedPers;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return null;
   }
-  return null;
+  const oldPers = getById(persObj.id);
+  const persKeys = Object.keys(persObj);
+  persKeys.forEach((propName) =>
+    persObj[propName] === "" ? (persObj[propName] = oldPers[propName]) : ""
+  );
+  const updatedPers = updatePers(persObj);
+  return updatedPers;
 };
 
 export const deletePerson = (id) => {
-  if (id.length === 24) {
-    return deletePers(id);
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return null;
   }
-  return null;
+  return deletePers(id);
 };

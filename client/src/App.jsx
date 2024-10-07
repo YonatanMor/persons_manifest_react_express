@@ -11,13 +11,12 @@ import {
   fetchUpdated,
 } from "./fetchDatas";
 // add note to log : "updated" / "deleted" / "created"
-// in delete tab when entering an old id the site crach on
-// add promp on wrong id enter: "not a valid id"
 // in update tab display old data and updated data
 
 function App() {
   const [renderData, setRenderData] = useState([]);
   const [showErrMsg, setShowErrMsg] = useState(false);
+  const [showWrongIdMsg, setShowWrongIdMsg] = useState(false);
   const [formType, setFormType] = useState("getAll");
   const [formData, setFormData] = useState({
     id: "",
@@ -29,26 +28,27 @@ function App() {
 
   const formTypes = {
     getAll: [],
-    getById: [{ name: "ID", type: "string", require: true }],
+    getById: [{ name: "ID", type: "string", require: true, maxLength: 24 }],
     create: [
       { name: "First Name", type: "string", require: true },
       { name: "City", type: "string", require: true },
-      { name: "Age", type: "string", require: true },
-      { name: "Gender", type: "string", require: true },
+      { name: "Age", type: "string", require: true, maxLength: 3 },
+      { name: "Gender", type: "select", require: true },
     ],
     update: [
-      { name: "ID", type: "string", require: true },
+      { name: "ID", type: "string", require: true, maxLength: 24 },
       { name: "First Name", type: "string" },
       { name: "City", type: "string" },
-      { name: "Age", type: "string" },
+      { name: "Age", type: "string", maxLength: 3 },
       { name: "Gender", type: "string" },
     ],
-    delete: [{ name: "ID", type: "string", require: true }],
+    delete: [{ name: "ID", type: "string", require: true, maxLength: 24 }],
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setShowErrMsg(false);
+    setShowWrongIdMsg(false);
     if (name === "age") {
       const numericValue = value.replace(/[^0-9]/g, "");
       setFormData({ ...formData, [name]: numericValue });
@@ -59,6 +59,7 @@ function App() {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
+      e.preventDefault();
       submitForm();
     }
   };
@@ -72,10 +73,13 @@ function App() {
       gender: "",
     });
     setShowErrMsg(false);
+    setShowWrongIdMsg(false);
   };
 
   const handleTabSelection = (tabName) => {
     setShowErrMsg(false);
+    setShowWrongIdMsg(false);
+
     if (tabName === "getAll") {
       getAll();
     }
@@ -109,7 +113,7 @@ function App() {
         if (FetchedData[0]) {
           setRenderData(FetchedData);
         } else {
-          console.log("wrong ID");
+          setShowWrongIdMsg(true);
         }
       } else {
         setShowErrMsg(true);
@@ -135,7 +139,7 @@ function App() {
         if (FetchedData) {
           setRenderData([FetchedData]);
         } else {
-          console.log("wrong id");
+          setShowWrongIdMsg(true);
         }
       } else {
         setShowErrMsg(true);
@@ -150,7 +154,7 @@ function App() {
         if (FetchedData) {
           setRenderData([FetchedData]);
         } else {
-          console.log("wrong id");
+          setShowWrongIdMsg(true);
         }
       } else {
         setShowErrMsg(true);
@@ -166,14 +170,13 @@ function App() {
             People Manifest Manager
           </h1>
         </div>
-        <div className="flex flex-grow gap-10 mt-10">
-          <div className="border rounded-xl grow pt-4 pb-10">
-            <div className="flex flex-col items-center">
+        <div className="mt-10">
+          <div className="rounded-xl grow pt-4 pb-10">
+            {/* <div className="flex flex-col items-center">
               <h2 className="text-3xl mb-4">Data Logger</h2>
-            </div>
+            </div> */}
             <div className="flex justify-center gap-12 pt-4 pb-10">
               <button
-                // onClick={() => getAll()}
                 onClick={() => handleTabSelection("getAll")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "getAll"
@@ -184,7 +187,6 @@ function App() {
                 Get All
               </button>
               <button
-                // onClick={() => setFormType("getById")}
                 onClick={() => handleTabSelection("getById")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "getById"
@@ -196,7 +198,6 @@ function App() {
               </button>
               <button
                 onClick={() => handleTabSelection("create")}
-                // onClick={() => setFormType("create")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "create"
                     ? "bg-[#088395]"
@@ -207,7 +208,6 @@ function App() {
               </button>
               <button
                 onClick={() => handleTabSelection("update")}
-                // onClick={() => setFormType("update")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "update"
                     ? "bg-[#088395]"
@@ -218,7 +218,6 @@ function App() {
               </button>
               <button
                 onClick={() => handleTabSelection("delete")}
-                // onClick={() => setFormType("delete")}
                 className={`text-2xl py-1 px-6 rounded-full ${
                   formType === "delete"
                     ? "bg-[#088395]"
@@ -229,9 +228,14 @@ function App() {
               </button>
             </div>
 
-            <div className="flex justify-center ">
-              <div className="p-10 bg-[#0B192C] rounded-lg">
-                <div className="gap-32  flex justify-center">
+            <div className="flex justify-center">
+              <div className="p-16 bg-[#0B192C] rounded-lg relative">
+                {showWrongIdMsg && (
+                  <div className="absolute top-4 left-0 text-center w-full text-xl text-red-500">
+                    ID does not exist
+                  </div>
+                )}
+                <div className="gap-32 flex justify-center">
                   <div className="text-2xl">
                     <div className="flex flex-col gap-5">
                       {formTypes[formType]?.map((field) => (
@@ -252,6 +256,7 @@ function App() {
                             className="px-4 w-96 bg-[#3a364a] rounded-md"
                             type={field.type}
                             name={field.name.toLowerCase().replace(" ", "")}
+                            maxLength={field.maxLength}
                             value={
                               formData[
                                 field.name.toLowerCase().replace(" ", "")
