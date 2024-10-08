@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   const persObj = req.body;
   const newPers = await createPerson(persObj);
-  res.json(newPers);
+  res.status(201).json(newPers);
 });
 
 router.put("/", async (req, res) => {
