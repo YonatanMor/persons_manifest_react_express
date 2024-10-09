@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineClear } from "react-icons/ai";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { MdOutlineImagesearchRoller } from "react-icons/md";
@@ -14,10 +14,11 @@ import {
 // in update tab display old data and updated data
 
 function App() {
-  const [renderData, setRenderData] = useState([]);
   const [showErrMsg, setShowErrMsg] = useState(false);
   const [showWrongIdMsg, setShowWrongIdMsg] = useState(false);
+  const [renderRows, setRenderRows] = useState([]);
   const [formType, setFormType] = useState("getAll");
+  const [tableData, setTableData] = useState([]);
   const [formData, setFormData] = useState({
     id: "",
     firstname: "",
@@ -30,17 +31,17 @@ function App() {
     getAll: [],
     getById: [{ name: "ID", type: "string", require: true, maxLength: 24 }],
     create: [
-      { name: "First Name", type: "string", require: true },
-      { name: "City", type: "string", require: true },
+      { name: "First Name", type: "string", require: true, maxLength: 14 },
+      { name: "City", type: "string", require: true, maxLength: 14 },
       { name: "Age", type: "string", require: true, maxLength: 3 },
-      { name: "Gender", type: "select", require: true },
+      { name: "Gender", type: "select", require: true, maxLength: 14 },
     ],
     update: [
       { name: "ID", type: "string", require: true, maxLength: 24 },
-      { name: "First Name", type: "string" },
-      { name: "City", type: "string" },
+      { name: "First Name", type: "string", maxLength: 14 },
+      { name: "City", type: "string", maxLength: 14 },
       { name: "Age", type: "string", maxLength: 3 },
-      { name: "Gender", type: "string" },
+      { name: "Gender", type: "string", maxLength: 14 },
     ],
     delete: [{ name: "ID", type: "string", require: true, maxLength: 24 }],
   };
@@ -76,6 +77,10 @@ function App() {
     setShowWrongIdMsg(false);
   };
 
+  const clearTable = () => {
+    setTableData([]);
+    setRenderRows([]);
+  };
   const handleTabSelection = (tabName) => {
     setShowErrMsg(false);
     setShowWrongIdMsg(false);
@@ -101,7 +106,7 @@ function App() {
     setFormType("getAll");
     const res = await fetchAll();
     const FetchedData = await res.json();
-    setRenderData(FetchedData);
+    setTableData(FetchedData);
   };
 
   const submitForm = async () => {
@@ -110,8 +115,9 @@ function App() {
       if (id) {
         const res = await fetchById(id);
         const FetchedData = await res.json();
-        if (FetchedData[0]) {
-          setRenderData(FetchedData);
+        console.log(FetchedData);
+        if (FetchedData) {
+          setTableData(FetchedData);
         } else {
           setShowWrongIdMsg(true);
         }
@@ -125,7 +131,7 @@ function App() {
       if (firstname && city && age && gender) {
         const res = await fetchCreated({ firstname, city, age, gender });
         const FetchedData = await res.json();
-        setRenderData([FetchedData]);
+        setTableData([FetchedData]);
       } else {
         setShowErrMsg(true);
       }
@@ -137,7 +143,7 @@ function App() {
         const res = await fetchUpdated({ id, firstname, city, age, gender });
         const FetchedData = await res.json();
         if (FetchedData) {
-          setRenderData([FetchedData]);
+          setTableData([FetchedData]);
         } else {
           setShowWrongIdMsg(true);
         }
@@ -152,7 +158,7 @@ function App() {
         const res = await fetchDeleted(id);
         const FetchedData = await res.json();
         if (FetchedData) {
-          setRenderData([FetchedData]);
+          setTableData([FetchedData]);
         } else {
           setShowWrongIdMsg(true);
         }
@@ -160,6 +166,32 @@ function App() {
         setShowErrMsg(true);
       }
     }
+  };
+
+  useEffect(() => {
+    setRenderRows([]);
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < tableData.length) {
+        setRenderRows((prev) => [...prev, tableData[index]]);
+        index += 1;
+      } else {
+        clearInterval(interval);
+      }
+    }, 40);
+    return () => clearInterval(interval);
+  }, [tableData]);
+
+  const handleRowClick = (person) => {
+    console.log(person);
+    setFormType("update");
+    setFormData({
+      id: person._id,
+      firstname: person.name,
+      city: person.city,
+      age: person.age,
+      gender: person.gender,
+    });
   };
 
   return (
@@ -172,9 +204,6 @@ function App() {
         </div>
         <div className="mt-10">
           <div className="rounded-xl grow pt-4 pb-10">
-            {/* <div className="flex flex-col items-center">
-              <h2 className="text-3xl mb-4">Data Logger</h2>
-            </div> */}
             <div className="flex justify-center gap-12 pt-4 pb-10">
               <button
                 onClick={() => handleTabSelection("getAll")}
@@ -256,6 +285,7 @@ function App() {
                             className="px-4 w-96 bg-[#3a364a] rounded-md"
                             type={field.type}
                             name={field.name.toLowerCase().replace(" ", "")}
+                            placeholder={field.placeholder}
                             maxLength={field.maxLength}
                             value={
                               formData[
@@ -294,7 +324,7 @@ function App() {
                     </>
                   )}
                   <button
-                    onClick={() => setRenderData([])}
+                    onClick={clearTable}
                     className="bg-[#3A1078] active:bg-[#3a107879] px-10 text-[1.35rem] text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                   >
                     <MdOutlineImagesearchRoller size={26} />
@@ -322,22 +352,29 @@ function App() {
                 </tr>
               </thead>
               <tbody>
-                {renderData.map((obj, i) => (
-                  <tr
-                    key={obj._id}
-                    className={`h-10 ${
-                      i % 2 === 0 ? "bg-[#201d37]" : "bg-[#372c46]"
-                    }`}
-                  >
-                    <td className="text-center">{i + 1}</td>
-                    <td className="text-center">{obj._id}</td>
-                    <td className="text-center">{obj.name}</td>
-                    <td className="text-center">{obj.age}</td>
-                    <td className="text-center">{obj.gender}</td>
-                    <td className="text-center">{obj.city}</td>
-                    <td></td>
-                  </tr>
-                ))}
+                {renderRows.map((obj, i) => {
+                  if (renderRows[i]) {
+                    return (
+                      <tr
+                        onClick={() => handleRowClick(obj)}
+                        key={obj._id}
+                        className={`h-10 ${
+                          i % 2 === 0
+                            ? "animate-bg-change-odd"
+                            : "animate-bg-change-even"
+                        }`}
+                      >
+                        <td className="text-center">{i + 1}</td>
+                        <td className="text-center">{obj._id}</td>
+                        <td className="text-center">{obj.name}</td>
+                        <td className="text-center">{obj.age}</td>
+                        <td className="text-center">{obj.gender}</td>
+                        <td className="text-center">{obj.city}</td>
+                        <td></td>
+                      </tr>
+                    );
+                  }
+                })}
               </tbody>
             </table>
           </div>
