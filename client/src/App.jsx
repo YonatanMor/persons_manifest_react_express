@@ -114,10 +114,10 @@ function App() {
       const { id } = formData;
       if (id) {
         const res = await fetchById(id);
-        const FetchedData = await res.json();
-        console.log(FetchedData);
-        if (FetchedData) {
-          setTableData(FetchedData);
+        const fetchedData = await res.json();
+        console.log(fetchedData);
+        if (fetchedData) {
+          setTableData(fetchedData);
         } else {
           setShowWrongIdMsg(true);
         }
@@ -183,7 +183,6 @@ function App() {
   }, [tableData]);
 
   const handleRowClick = (person) => {
-    console.log(person);
     setFormType("update");
     setFormData({
       id: person._id,
@@ -258,13 +257,13 @@ function App() {
             </div>
 
             <div className="flex justify-center">
-              <div className="p-16 bg-[#0B192C] rounded-lg relative">
+              <div className="p-16 bg-[#0B192C]  w-[884px] rounded-lg relative">
                 {showWrongIdMsg && (
                   <div className="absolute top-4 left-0 text-center w-full text-xl text-red-500">
                     ID does not exist
                   </div>
                 )}
-                <div className="gap-32 flex justify-center">
+                <div className="gap-32 mb-8 flex justify-center">
                   <div className="text-2xl">
                     <div className="flex flex-col gap-5">
                       {formTypes[formType]?.map((field) => (
@@ -304,7 +303,7 @@ function App() {
                     </form>
                   </div>
                 </div>
-                <div className="mt-8 flex justify-center gap-8">
+                <div className="flex justify-center gap-8">
                   {formTypes[formType][0] && (
                     <>
                       <button
@@ -358,7 +357,7 @@ function App() {
                       <tr
                         onClick={() => handleRowClick(obj)}
                         key={obj._id}
-                        className={`h-10 ${
+                        className={`text-[#FAF7F0] cursor-pointer hover:text-[#FFB200] h-10  ${
                           i % 2 === 0
                             ? "animate-bg-change-odd"
                             : "animate-bg-change-even"
