@@ -13,10 +13,42 @@ import {
 // add note to log : "updated" / "deleted" / "created"
 // in update tab display old data and updated data
 
+// ----------------------------------------------------------------------------------------
+
+import { motion } from "framer-motion";
+
+const variants = {
+  open: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      y: { stiffness: 1000, velocity: -100 },
+    },
+  },
+  closed: {
+    y: 50,
+    opacity: 0,
+    transition: {
+      y: { stiffness: 1000 },
+    },
+  },
+};
+
+const variantsAll = {
+  open: {
+    transition: { staggerChildren: 0.07, delayChildren: 0.2 },
+  },
+  closed: {
+    transition: { staggerChildren: 0.05, staggerDirection: -1 },
+  },
+};
+
+// ----------------------------------------------------------------------------------------
+
 function App() {
   const [showErrMsg, setShowErrMsg] = useState(false);
   const [showWrongIdMsg, setShowWrongIdMsg] = useState(false);
-  const [renderRows, setRenderRows] = useState([]);
+  // const [renderRows, setRenderRows] = useState([]);
   const [formType, setFormType] = useState("getAll");
   const [tableData, setTableData] = useState([]);
   const [formData, setFormData] = useState({
@@ -79,7 +111,7 @@ function App() {
 
   const clearTable = () => {
     setTableData([]);
-    setRenderRows([]);
+    // setRenderRows([]);
   };
   const handleTabSelection = (tabName) => {
     setShowErrMsg(false);
@@ -116,7 +148,7 @@ function App() {
         const res = await fetchById(id);
         const fetchedData = await res.json();
         console.log(fetchedData);
-        if (fetchedData) {
+        if (fetchedData[0]) {
           setTableData(fetchedData);
         } else {
           setShowWrongIdMsg(true);
@@ -168,19 +200,19 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    setRenderRows([]);
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index < tableData.length) {
-        setRenderRows((prev) => [...prev, tableData[index]]);
-        index += 1;
-      } else {
-        clearInterval(interval);
-      }
-    }, 40);
-    return () => clearInterval(interval);
-  }, [tableData]);
+  // useEffect(() => {
+  //   setRenderRows([]);
+  //   let index = 0;
+  //   const interval = setInterval(() => {
+  //     if (index < tableData.length) {
+  //       setRenderRows((prev) => [...prev, tableData[index]]);
+  //       index += 1;
+  //     } else {
+  //       clearInterval(interval);
+  //     }
+  //   }, 40);
+  //   return () => clearInterval(interval);
+  // }, [tableData]);
 
   const handleRowClick = (person) => {
     setFormType("update");
@@ -257,13 +289,17 @@ function App() {
             </div>
 
             <div className="flex justify-center">
-              <div className="p-16 bg-[#0B192C]  w-[884px] rounded-lg relative">
+              <div className="p-16 bg-[#0B192C] w-[884px] rounded-lg relative">
                 {showWrongIdMsg && (
                   <div className="absolute top-4 left-0 text-center w-full text-xl text-red-500">
                     ID does not exist
                   </div>
                 )}
-                <div className="gap-32 mb-8 flex justify-center">
+                <div
+                  className={`gap-32 flex justify-center ${
+                    formTypes[formType][0] ? "mb-8" : ""
+                  }`}
+                >
                   <div className="text-2xl">
                     <div className="flex flex-col gap-5">
                       {formTypes[formType]?.map((field) => (
@@ -350,31 +386,30 @@ function App() {
                   <th className="font-Poppins font-extralight">City</th>
                 </tr>
               </thead>
-              <tbody>
-                {renderRows.map((obj, i) => {
-                  if (renderRows[i]) {
-                    return (
-                      <tr
-                        onClick={() => handleRowClick(obj)}
-                        key={obj._id}
-                        className={`text-[#FAF7F0] cursor-pointer hover:text-[#FFB200] h-10  ${
-                          i % 2 === 0
-                            ? "animate-bg-change-odd"
-                            : "animate-bg-change-even"
-                        }`}
-                      >
-                        <td className="text-center">{i + 1}</td>
-                        <td className="text-center">{obj._id}</td>
-                        <td className="text-center">{obj.name}</td>
-                        <td className="text-center">{obj.age}</td>
-                        <td className="text-center">{obj.gender}</td>
-                        <td className="text-center">{obj.city}</td>
-                        <td></td>
-                      </tr>
-                    );
-                  }
-                })}
-              </tbody>
+              <motion.tbody variants={variantsAll}>
+                {tableData.map((obj, i) => (
+                  <motion.tr
+                    variants={variants}
+                    // whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 1.05 }}
+                    onClick={() => handleRowClick(obj)}
+                    key={obj._id}
+                    className={`text-[#FAF7F0] cursor-pointer hover:text-[#FFB200] h-10  ${
+                      i % 2 === 0
+                        ? "animate-bg-change-odd"
+                        : "animate-bg-change-even"
+                    }`}
+                  >
+                    <motion.td className="text-center">{i + 1}</motion.td>
+                    <motion.td className="text-center">{obj._id}</motion.td>
+                    <motion.td className="text-center">{obj.name}</motion.td>
+                    <motion.td className="text-center">{obj.age}</motion.td>
+                    <motion.td className="text-center">{obj.gender}</motion.td>
+                    <motion.td className="text-center">{obj.city}</motion.td>
+                    <motion.td></motion.td>
+                  </motion.tr>
+                ))}
+              </motion.tbody>
             </table>
           </div>
         </div>
