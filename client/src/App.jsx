@@ -360,13 +360,16 @@ function App() {
             <h2 className="text-3xl mb-6">Log</h2>
           </div>
           <div className="flex">
-            <table className=" w-full mx-4 text-xl">
+            <table
+              className="w-full mx-4 text-xl"
+              style={{ tableLayout: "fixed" }}
+            >
               <thead>
-                <tr className="h-12 ">
-                  <th></th>
-                  <th className="font-Poppins font-extralight">ID</th>
+                <tr className="h-12">
+                  <th className="w-16"></th>
+                  <th className="font-Poppins font-extralight w-80">ID</th>
                   <th className="font-Poppins font-extralight">Name</th>
-                  <th className="font-Poppins font-extralight">Age</th>
+                  <th className="font-Poppins font-extralight w-20">Age</th>
                   <th className="font-Poppins font-extralight">Gender</th>
                   <th className="font-Poppins font-extralight">City</th>
                 </tr>
@@ -390,7 +393,6 @@ function App() {
                     <motion.td className="text-center">{obj.age}</motion.td>
                     <motion.td className="text-center">{obj.gender}</motion.td>
                     <motion.td className="text-center">{obj.city}</motion.td>
-                    <motion.td></motion.td>
                   </motion.tr>
                 ))}
               </tbody>
