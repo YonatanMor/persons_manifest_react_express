@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineClear } from "react-icons/ai";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { MdOutlineImagesearchRoller } from "react-icons/md";
@@ -13,42 +13,11 @@ import {
 // add note to log : "updated" / "deleted" / "created"
 // in update tab display old data and updated data
 
-// ----------------------------------------------------------------------------------------
-
 import { motion } from "framer-motion";
-
-const variants = {
-  open: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      y: { stiffness: 1000, velocity: -100 },
-    },
-  },
-  closed: {
-    y: 50,
-    opacity: 0,
-    transition: {
-      y: { stiffness: 1000 },
-    },
-  },
-};
-
-const variantsAll = {
-  open: {
-    transition: { staggerChildren: 0.07, delayChildren: 0.2 },
-  },
-  closed: {
-    transition: { staggerChildren: 0.05, staggerDirection: -1 },
-  },
-};
-
-// ----------------------------------------------------------------------------------------
 
 function App() {
   const [showErrMsg, setShowErrMsg] = useState(false);
   const [showWrongIdMsg, setShowWrongIdMsg] = useState(false);
-  // const [renderRows, setRenderRows] = useState([]);
   const [formType, setFormType] = useState("getAll");
   const [tableData, setTableData] = useState([]);
   const [formData, setFormData] = useState({
@@ -58,6 +27,11 @@ function App() {
     age: "",
     gender: "",
   });
+
+  const rowVariants = {
+    start: { opacity: 0 },
+    finish: { opacity: 1, transition: { duration: 0.3 } },
+  };
 
   const formTypes = {
     getAll: [],
@@ -111,8 +85,8 @@ function App() {
 
   const clearTable = () => {
     setTableData([]);
-    // setRenderRows([]);
   };
+
   const handleTabSelection = (tabName) => {
     setShowErrMsg(false);
     setShowWrongIdMsg(false);
@@ -124,6 +98,13 @@ function App() {
       setFormType("getById");
     }
     if (tabName === "create") {
+      setFormData({
+        id: "",
+        firstname: "",
+        city: "",
+        age: "",
+        gender: "",
+      });
       setFormType("create");
     }
     if (tabName === "update") {
@@ -200,20 +181,6 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   setRenderRows([]);
-  //   let index = 0;
-  //   const interval = setInterval(() => {
-  //     if (index < tableData.length) {
-  //       setRenderRows((prev) => [...prev, tableData[index]]);
-  //       index += 1;
-  //     } else {
-  //       clearInterval(interval);
-  //     }
-  //   }, 40);
-  //   return () => clearInterval(interval);
-  // }, [tableData]);
-
   const handleRowClick = (person) => {
     setFormType("update");
     setFormData({
@@ -228,7 +195,7 @@ function App() {
   return (
     <div className="text-white flex flex-col items-center min-h-screen w-full font-Poppins font-extralight bg-[#0B192C]">
       <div className="border rounded-xl bg-[#0d0c22] w-[90%] p-10 mt-4">
-        <div className="text-center ">
+        <div className="text-center">
           <h1 className=" text-[3rem] font-Playwrite">
             People Manifest Manager
           </h1>
@@ -236,26 +203,32 @@ function App() {
         <div className="mt-10">
           <div className="rounded-xl grow pt-4 pb-10">
             <div className="flex justify-center gap-12 pt-4 pb-10">
-              <button
+              <motion.button
+                className={`text-2xl py-1 px-6 rounded-full 
+                  ${formType === "getAll" ? "bg-[#088395]" : ""}
+                  `}
+                whileHover={{
+                  backgroundColor: "#a9d4de",
+                  textShadow: "0px 0px 8px #ffffff",
+                  boxShadow: "0px 0px 8px #a9d4de",
+                }}
                 onClick={() => handleTabSelection("getAll")}
-                className={`text-2xl py-1 px-6 rounded-full ${
-                  formType === "getAll"
-                    ? "bg-[#088395]"
-                    : "hover:bg-[#a9d4de] hover:text-black"
-                }`}
               >
                 Get All
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileHover={{
+                  backgroundColor: "#a9d4de",
+                  textShadow: "0px 0px 8px #ffffff",
+                  boxShadow: "0px 0px 8px #a9d4de",
+                }}
                 onClick={() => handleTabSelection("getById")}
                 className={`text-2xl py-1 px-6 rounded-full ${
-                  formType === "getById"
-                    ? "bg-[#088395]"
-                    : "hover:bg-[#a9d4de] hover:text-black"
+                  formType === "getById" ? "bg-[#088395]" : ""
                 }`}
               >
                 Get By ID
-              </button>
+              </motion.button>
               <button
                 onClick={() => handleTabSelection("create")}
                 className={`text-2xl py-1 px-6 rounded-full ${
@@ -342,29 +315,41 @@ function App() {
                 <div className="flex justify-center gap-8">
                   {formTypes[formType][0] && (
                     <>
-                      <button
+                      <motion.button
+                        whileHover={{
+                          // textShadow: "0px 0px 8px #ffffff",
+                          boxShadow: "0px 0px 9px #a9d4de",
+                        }}
                         onClick={clearForm}
                         className="bg-[#4379F2] active:bg-[#437af281] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                       >
                         <AiOutlineClear size={26} />
                         Clear Form
-                      </button>
-                      <button
+                      </motion.button>
+                      <motion.button
+                        whileHover={{
+                          // textShadow: "0px 0px 8px #ffffff",
+                          boxShadow: "0px 0px 8px #a9d4de",
+                        }}
                         onClick={submitForm}
                         className="bg-[#347928] active:bg-[#34792888] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                       >
                         <IoCloudUploadOutline size={26} />
                         Submit
-                      </button>
+                      </motion.button>
                     </>
                   )}
-                  <button
+                  <motion.button
+                    whileHover={{
+                      // textShadow: "0px 0px 8px #ffffff",
+                      boxShadow: "0px 0px 8px #a9d4de",
+                    }}
                     onClick={clearTable}
                     className="bg-[#3A1078] active:bg-[#3a107879] px-10 text-[1.35rem] text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                   >
                     <MdOutlineImagesearchRoller size={26} />
                     Clear Table
-                  </button>
+                  </motion.button>
                 </div>
               </div>
             </div>
@@ -386,18 +371,17 @@ function App() {
                   <th className="font-Poppins font-extralight">City</th>
                 </tr>
               </thead>
-              <motion.tbody variants={variantsAll}>
+              <tbody>
                 {tableData.map((obj, i) => (
                   <motion.tr
-                    variants={variants}
-                    // whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 1.05 }}
+                    whileTap={{ scale: 1.01 }}
+                    variants={rowVariants}
+                    initial="start"
+                    animate="finish"
                     onClick={() => handleRowClick(obj)}
                     key={obj._id}
-                    className={`text-[#FAF7F0] cursor-pointer hover:text-[#FFB200] h-10  ${
-                      i % 2 === 0
-                        ? "animate-bg-change-odd"
-                        : "animate-bg-change-even"
+                    className={`text-[#FAF7F0] cursor-pointer hover:text-[#FFB200] h-10 ${
+                      i % 2 === 0 ? "bg-[#1E3E62]" : "bg-[#0B192C]"
                     }`}
                   >
                     <motion.td className="text-center">{i + 1}</motion.td>
@@ -409,7 +393,7 @@ function App() {
                     <motion.td></motion.td>
                   </motion.tr>
                 ))}
-              </motion.tbody>
+              </tbody>
             </table>
           </div>
         </div>
