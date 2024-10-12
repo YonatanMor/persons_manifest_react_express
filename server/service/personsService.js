@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import {
   addPers,
+  addManyPers,
   allPers,
   deletePers,
   getById,
@@ -22,6 +23,11 @@ export const getPersonById = (id) => {
 export const createPerson = (persObj) => {
   const newPers = addPers(persObj);
   return newPers;
+};
+
+export const createMany = (persArr) => {
+  const addedPersons = addManyPers(persArr);
+  return addedPersons;
 };
 
 export const updatePerson = (persObj) => {

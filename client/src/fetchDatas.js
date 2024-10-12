@@ -36,3 +36,13 @@ export const fetchDeleted = (id) => {
     },
   });
 };
+
+export const fetchCsvFile =async (file) => {
+ return fetch(`${PATH}/createMany`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(file),
+  });
+};

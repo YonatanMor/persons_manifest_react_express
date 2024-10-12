@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  createMany,
   createPerson,
   deletePerson,
   getAllPersons,
@@ -32,6 +33,12 @@ router.post("/", async (req, res) => {
   const persObj = req.body;
   const newPers = await createPerson(persObj);
   res.status(201).json(newPers);
+});
+
+router.post("/createMany", async (req, res) => {
+  const persArr = req.body;
+  const persons = await createMany(persArr);
+  res.status(201).json(persons); //persons is an array
 });
 
 router.put("/", async (req, res) => {

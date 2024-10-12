@@ -26,6 +26,14 @@ export const addPers = (persObj) => {
   }
 };
 
+export const addManyPers = (persArr) => {
+  try {
+    return Person.insertMany(persArr);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export const updatePers = (data) => {
   const { id, ...persObj } = data;
   try {

@@ -1,23 +1,23 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
+import { motion } from "framer-motion";
 import { AiOutlineClear } from "react-icons/ai";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { LuSendHorizonal } from "react-icons/lu";
 import { MdOutlineImagesearchRoller } from "react-icons/md";
-
 import {
   fetchAll,
   fetchById,
   fetchCreated,
+  fetchCsvFile,
   fetchDeleted,
   fetchUpdated,
 } from "./fetchDatas";
 // add note to log : "updated" / "deleted" / "created"
 // in update tab display old data and updated data
 
-import { motion } from "framer-motion";
-
 function App() {
+  const fileInputRef = useRef(null);
   const [showErrMsg, setShowErrMsg] = useState(false);
   const [showWrongIdMsg, setShowWrongIdMsg] = useState(false);
   const [formType, setFormType] = useState("getAll");
@@ -54,7 +54,26 @@ function App() {
     delete: [{ name: "ID", type: "string", require: true, maxLength: 24 }],
   };
 
-  const uploadFile = () => {};
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const text = e.target.result;
+      const rows = text.split("\n").map((row) => row.split(","));
+      const headers = rows[0];
+      const data = rows.slice(1).map((row) => {
+        const obj = {};
+        row.forEach((val, index) => {
+          obj[headers[index].trim()] = val.trim();
+        });
+        return obj;
+      });
+      const res = await fetchCsvFile(data);
+      const fetchedData = await res.json();
+      setTableData(fetchedData);
+    };
+    reader.readAsText(file);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -206,17 +225,23 @@ function App() {
             ease: "linear",
           },
         }}
-        className="fixed -inset-[50vh] bg-cover bg-center -z-10 bg-[url('https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]"
+        className="fixed -inset-[60vh] bg-cover bg-center -z-10 bg-[url('https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]"
       ></motion.div>
       <div className="border relative rounded-xl bg-[#0d0c22e0]  select-none w-[90%] p-10 my-12">
         <motion.div
-          onClick={uploadFile}
+          onClick={() => fileInputRef.current.click()}
           whileHover={{
             boxShadow: "0px 0px 8px #a9d4de",
           }}
           whileTap={{ backgroundColor: "#E4E0E1" }}
           className="absolute rounded-full top-4 left-4 p-2"
         >
+          <input
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            type="file"
+            className="hidden"
+          ></input>
           <IoCloudUploadOutline size={36} />
         </motion.div>
         <div className="text-center">
