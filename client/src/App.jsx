@@ -118,8 +118,8 @@ function App() {
   const getAll = async () => {
     setFormType("getAll");
     const res = await fetchAll();
-    const FetchedData = await res.json();
-    setTableData(FetchedData);
+    const fetchedData = await res.json();
+    setTableData(fetchedData);
   };
 
   const submitForm = async () => {
@@ -128,7 +128,6 @@ function App() {
       if (id) {
         const res = await fetchById(id);
         const fetchedData = await res.json();
-        console.log(fetchedData);
         if (fetchedData[0]) {
           setTableData(fetchedData);
         } else {
@@ -143,8 +142,8 @@ function App() {
       const { firstname, city, age, gender } = formData;
       if (firstname && city && age && gender) {
         const res = await fetchCreated({ firstname, city, age, gender });
-        const FetchedData = await res.json();
-        setTableData([FetchedData]);
+        const fetchedData = await res.json();
+        setTableData([fetchedData]);
       } else {
         setShowErrMsg(true);
       }
@@ -154,9 +153,9 @@ function App() {
       const { id, firstname, city, age, gender } = formData;
       if (id) {
         const res = await fetchUpdated({ id, firstname, city, age, gender });
-        const FetchedData = await res.json();
-        if (FetchedData) {
-          setTableData([FetchedData]);
+        const fetchedData = await res.json();
+        if (fetchedData) {
+          setTableData([fetchedData]);
         } else {
           setShowWrongIdMsg(true);
         }
@@ -169,9 +168,9 @@ function App() {
       const { id } = formData;
       if (id) {
         const res = await fetchDeleted(id);
-        const FetchedData = await res.json();
-        if (FetchedData) {
-          setTableData([FetchedData]);
+        const fetchedData = await res.json();
+        if (fetchedData) {
+          setTableData([fetchedData]);
         } else {
           setShowWrongIdMsg(true);
         }
@@ -193,8 +192,19 @@ function App() {
   };
 
   return (
-    <div className="text-white flex flex-col items-center min-h-screen w-full font-Poppins font-extralight bg-[#0B192C]">
-      <div className="border rounded-xl bg-[#0d0c22] w-[90%] p-10 mt-4">
+    <div className="text-white flex flex-col items-center min-h-screen w-full font-Poppins font-extralight ">
+      <motion.div
+        animate={{
+          rotate: 360,
+          transition: {
+            duration: 600,
+            repeat: Infinity,
+            ease: "linear",
+          },
+        }}
+        className="fixed -inset-[50vh] bg-cover bg-center -z-10 bg-[url('https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]"
+      ></motion.div>
+      <div className="border rounded-xl bg-[#0d0c22e0] w-[90%] p-10 my-12">
         <div className="text-center">
           <h1 className=" text-[3rem] font-Playwrite">
             People Manifest Manager
