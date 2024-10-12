@@ -1,6 +1,8 @@
 import { useState } from "react";
+
 import { AiOutlineClear } from "react-icons/ai";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { LuSendHorizonal } from "react-icons/lu";
 import { MdOutlineImagesearchRoller } from "react-icons/md";
 
 import {
@@ -51,6 +53,8 @@ function App() {
     ],
     delete: [{ name: "ID", type: "string", require: true, maxLength: 24 }],
   };
+
+  const uploadFile = () => {};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -192,7 +196,7 @@ function App() {
   };
 
   return (
-    <div className="text-white flex flex-col items-center min-h-screen w-full font-Poppins font-extralight ">
+    <div className="text-white flex flex-col items-center font-Poppins font-extralight ">
       <motion.div
         animate={{
           rotate: 360,
@@ -204,7 +208,17 @@ function App() {
         }}
         className="fixed -inset-[50vh] bg-cover bg-center -z-10 bg-[url('https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]"
       ></motion.div>
-      <div className="border rounded-xl bg-[#0d0c22e0] w-[90%] p-10 my-12">
+      <div className="border relative rounded-xl bg-[#0d0c22e0]  select-none w-[90%] p-10 my-12">
+        <motion.div
+          onClick={uploadFile}
+          whileHover={{
+            boxShadow: "0px 0px 8px #a9d4de",
+          }}
+          whileTap={{ backgroundColor: "#E4E0E1" }}
+          className="absolute rounded-full top-4 left-4 p-2"
+        >
+          <IoCloudUploadOutline size={36} />
+        </motion.div>
         <div className="text-center">
           <h1 className=" text-[3rem] font-Playwrite">
             People Manifest Manager
@@ -272,69 +286,68 @@ function App() {
             </div>
 
             <div className="flex justify-center">
-              <div className="p-16 bg-[#0B192C] w-[884px] rounded-lg relative">
-                {showWrongIdMsg && (
-                  <div className="absolute top-4 left-0 text-center w-full text-xl text-red-500">
-                    ID does not exist
-                  </div>
-                )}
-                <div
-                  className={`gap-32 flex justify-center ${
-                    formTypes[formType][0] ? "mb-8" : ""
-                  }`}
-                >
-                  <div className="text-2xl">
-                    <div className="flex flex-col gap-5">
-                      {formTypes[formType]?.map((field) => (
-                        <div key={field.name}>
-                          <span>{field.name}</span>
-                        </div>
-                      ))}
+              {formTypes[formType][0] && (
+                <div className="p-16 bg-[#0B192C] w-[884px] rounded-lg relative">
+                  {showWrongIdMsg && (
+                    <div className="absolute top-4 left-0 text-center w-full text-xl text-red-500">
+                      ID does not exist
+                    </div>
+                  )}
+                  <div
+                    className={`gap-32 flex justify-center ${
+                      formTypes[formType][0] ? "mb-8" : ""
+                    }`}
+                  >
+                    <div className="text-2xl">
+                      <div className="flex flex-col gap-5">
+                        {formTypes[formType]?.map((field) => (
+                          <div key={field.name}>
+                            <span>{field.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="text-2xl">
+                      <form
+                        onKeyDown={handleKeyDown}
+                        className="flex flex-col gap-5"
+                      >
+                        {formTypes[formType]?.map((field) => (
+                          <div className="relative" key={field.name}>
+                            <input
+                              className="px-4 w-96 bg-[#3a364a] rounded-md"
+                              type={field.type}
+                              name={field.name.toLowerCase().replace(" ", "")}
+                              placeholder={field.placeholder}
+                              maxLength={field.maxLength}
+                              value={
+                                formData[
+                                  field.name.toLowerCase().replace(" ", "")
+                                ]
+                              }
+                              onChange={handleInputChange}
+                            />
+                            {field.require && showErrMsg && (
+                              <div className="absolute top-[1px] -left-24 text-lg text-red-500 pointer-events-none">
+                                Required
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </form>
                     </div>
                   </div>
-                  <div className="text-2xl">
-                    <form
-                      onKeyDown={handleKeyDown}
-                      className="flex flex-col gap-5"
-                    >
-                      {formTypes[formType]?.map((field) => (
-                        <div className="relative" key={field.name}>
-                          <input
-                            className="px-4 w-96 bg-[#3a364a] rounded-md"
-                            type={field.type}
-                            name={field.name.toLowerCase().replace(" ", "")}
-                            placeholder={field.placeholder}
-                            maxLength={field.maxLength}
-                            value={
-                              formData[
-                                field.name.toLowerCase().replace(" ", "")
-                              ]
-                            }
-                            onChange={handleInputChange}
-                          />
-                          {field.require && showErrMsg && (
-                            <div className="absolute top-[1px] -left-24 text-lg text-red-500 pointer-events-none">
-                              Required
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </form>
-                  </div>
-                </div>
-                <div className="flex justify-center gap-8">
-                  {formTypes[formType][0] && (
+                  <div className="flex justify-center gap-8">
                     <>
                       <motion.button
                         whileHover={{
-                          // textShadow: "0px 0px 8px #ffffff",
                           boxShadow: "0px 0px 9px #a9d4de",
                         }}
+                        whileTap={{ backgroundColor: "#E4E0E1" }}
                         onClick={clearForm}
-                        className="bg-[#4379F2] active:bg-[#437af281] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
+                        className="absolute  top-2 right-2 rounded-full m-3 p-2 flex justify-center items-center "
                       >
-                        <AiOutlineClear size={26} />
-                        Clear Form
+                        <AiOutlineClear size={32} />
                       </motion.button>
                       <motion.button
                         whileHover={{
@@ -344,30 +357,30 @@ function App() {
                         onClick={submitForm}
                         className="bg-[#347928] active:bg-[#34792888] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
                       >
-                        <IoCloudUploadOutline size={26} />
                         Submit
+                        <LuSendHorizonal size={22} />
                       </motion.button>
                     </>
-                  )}
-                  <motion.button
-                    whileHover={{
-                      // textShadow: "0px 0px 8px #ffffff",
-                      boxShadow: "0px 0px 8px #a9d4de",
-                    }}
-                    onClick={clearTable}
-                    className="bg-[#3A1078] active:bg-[#3a107879] px-10 text-[1.35rem] text-xl rounded-lg py-2 flex justify-center items-center gap-3"
-                  >
-                    <MdOutlineImagesearchRoller size={26} />
-                    Clear Table
-                  </motion.button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
         <div className="border my-8 rounded-xl grow py-4">
-          <div className="flex flex-col items-center">
+          <div className="relative flex justify-center items-center">
             <h2 className="text-3xl mb-6">Log</h2>
+
+            <motion.div
+              whileHover={{
+                boxShadow: "0px 0px 8px #a9d4de",
+              }}
+              whileTap={{ backgroundColor: "#E4E0E1" }}
+              onClick={clearTable}
+              className="absolute select-none left-3 p-2 cursor-pointer rounded-full flex justify-center"
+            >
+              <MdOutlineImagesearchRoller size={32} />
+            </motion.div>
           </div>
           <div className="flex">
             <table
