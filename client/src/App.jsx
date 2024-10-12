@@ -14,13 +14,13 @@ import {
   fetchUpdated,
 } from "./fetchDatas";
 // add note to log : "updated" / "deleted" / "created"
-// in update tab display old data and updated data
 
 function App() {
   const fileInputRef = useRef(null);
   const [showErrMsg, setShowErrMsg] = useState(false);
   const [showWrongIdMsg, setShowWrongIdMsg] = useState(false);
   const [formType, setFormType] = useState("getAll");
+  const [formMsg, setFormMsg] = useState("");
   const [tableData, setTableData] = useState([]);
   const [formData, setFormData] = useState({
     id: "",
@@ -167,6 +167,10 @@ function App() {
         const res = await fetchCreated({ firstname, city, age, gender });
         const fetchedData = await res.json();
         setTableData([fetchedData]);
+        setFormMsg("Person added");
+        setTimeout(() => {
+          setFormMsg("");
+        }, 3000);
       } else {
         setShowErrMsg(true);
       }
@@ -179,6 +183,10 @@ function App() {
         const fetchedData = await res.json();
         if (fetchedData) {
           setTableData([fetchedData]);
+          setFormMsg("Person updated");
+          setTimeout(() => {
+            setFormMsg("");
+          }, 3000);
         } else {
           setShowWrongIdMsg(true);
         }
@@ -194,6 +202,10 @@ function App() {
         const fetchedData = await res.json();
         if (fetchedData) {
           setTableData([fetchedData]);
+          setFormMsg("Person deleted");
+          setTimeout(() => {
+            setFormMsg("");
+          }, 3000);
         } else {
           setShowWrongIdMsg(true);
         }
@@ -387,6 +399,17 @@ function App() {
                       </motion.button>
                     </>
                   </div>
+                  {formMsg && (
+                    <div
+                      className={`absolute animate-fadeInOut bg-gradient-to-r font-normal from-transparent ${
+                        formMsg === "Person deleted"
+                          ? "via-red-500"
+                          : "via-green-500"
+                      } to-transparent bottom-4 w-full left-0 text-center text-black text-xl`}
+                    >
+                      {formMsg}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
