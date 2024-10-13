@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { AiOutlineClear } from "react-icons/ai";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { LuSendHorizonal } from "react-icons/lu";
-import { MdOutlineImagesearchRoller } from "react-icons/md";
 import {
   fetchAll,
   fetchById,
@@ -32,7 +31,7 @@ function App() {
 
   const rowVariants = {
     start: { opacity: 0 },
-    finish: { opacity: 1, transition: { duration: 0.3 } },
+    finish: { opacity: 1, transition: { duration: 1.3 } },
   };
 
   const formTypes = {
@@ -71,6 +70,7 @@ function App() {
       const res = await fetchCsvFile(data);
       const fetchedData = await res.json();
       setTableData(fetchedData);
+      setFormMsg("File Added");
     };
     reader.readAsText(file);
   };
@@ -239,14 +239,14 @@ function App() {
         }}
         className="fixed -inset-[60vh] bg-cover bg-center -z-10 bg-[url('https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]"
       ></motion.div>
-      <div className="border relative rounded-xl bg-[#0d0c22e0]  select-none w-[90%] p-10 my-12">
+      <div className=" relative rounded-xl bg-[#0d0c22e0]  select-none w-[90%] p-10 my-12">
         <motion.div
           onClick={() => fileInputRef.current.click()}
           whileHover={{
             boxShadow: "0px 0px 8px #a9d4de",
           }}
           whileTap={{ backgroundColor: "#E4E0E1" }}
-          className="absolute rounded-full top-4 left-4 p-2"
+          className="absolute cursor-pointer rounded-full top-4 left-4 p-2"
         >
           <input
             ref={fileInputRef}
@@ -264,32 +264,28 @@ function App() {
         <div className="mt-10">
           <div className="rounded-xl grow pt-4 pb-10">
             <div className="flex justify-center gap-12 pt-4 pb-10">
-              <motion.button
+              <button
                 className={`text-2xl py-1 px-6 rounded-full 
-                  ${formType === "getAll" ? "bg-[#088395]" : ""}
+                  ${
+                    formType === "getAll"
+                      ? "bg-[#088395]"
+                      : "hover:bg-[#a9d4de] hover:text-black"
+                  }
                   `}
-                whileHover={{
-                  backgroundColor: "#a9d4de",
-                  textShadow: "0px 0px 8px #ffffff",
-                  boxShadow: "0px 0px 8px #a9d4de",
-                }}
                 onClick={() => handleTabSelection("getAll")}
               >
                 Get All
-              </motion.button>
-              <motion.button
-                whileHover={{
-                  backgroundColor: "#a9d4de",
-                  textShadow: "0px 0px 8px #ffffff",
-                  boxShadow: "0px 0px 8px #a9d4de",
-                }}
+              </button>
+              <button
                 onClick={() => handleTabSelection("getById")}
                 className={`text-2xl py-1 px-6 rounded-full ${
-                  formType === "getById" ? "bg-[#088395]" : ""
+                  formType === "getById"
+                    ? "bg-[#088395]"
+                    : "hover:bg-[#a9d4de] hover:text-black"
                 }`}
               >
                 Get By ID
-              </motion.button>
+              </button>
               <button
                 onClick={() => handleTabSelection("create")}
                 className={`text-2xl py-1 px-6 rounded-full ${
@@ -388,13 +384,17 @@ function App() {
                       </motion.button>
                       <motion.button
                         whileHover={{
-                          // textShadow: "0px 0px 8px #ffffff",
                           boxShadow: "0px 0px 8px #a9d4de",
                         }}
                         onClick={submitForm}
-                        className="bg-[#347928] active:bg-[#34792888] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3"
+                        className={`${
+                          formType === "delete"
+                            ? "bg-red-500 active:bg-[#ef444483]"
+                            : "bg-[#347928] active:bg-[#34792888]"
+                        } bg-[#347928] active:bg-[#34792888] text-[1.35rem] px-10 text-xl rounded-lg py-2 flex justify-center items-center gap-3`}
                       >
-                        Submit
+                        {formType === "delete" ? "Delete" : "Submit"}
+                        {}
                         <LuSendHorizonal size={22} />
                       </motion.button>
                     </>
@@ -427,7 +427,7 @@ function App() {
               onClick={clearTable}
               className="absolute select-none left-3 p-2 cursor-pointer rounded-full flex justify-center"
             >
-              <MdOutlineImagesearchRoller size={32} />
+              <AiOutlineClear size={32} />
             </motion.div>
           </div>
           <div className="flex">
@@ -448,6 +448,7 @@ function App() {
               <tbody>
                 {tableData.map((obj, i) => (
                   <motion.tr
+                  style={{cursor:"pointer"}}
                     whileTap={{ scale: 1.01 }}
                     variants={rowVariants}
                     initial="start"
