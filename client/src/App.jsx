@@ -239,14 +239,14 @@ function App() {
         }}
         className="fixed -inset-[60vh] bg-cover bg-center -z-10 bg-[url('https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]"
       ></motion.div>
-      <div className=" relative rounded-xl bg-[#0d0c22e0]  select-none w-[90%] p-10 my-12">
+      <div className=" relative rounded-xl bg-[#0d0c22e0] shadow-[inset_0px_0px_30px_5px_rgba(0,0,0,0.6)] select-none w-[90%] p-10 my-12">
         <motion.div
           onClick={() => fileInputRef.current.click()}
           whileHover={{
             boxShadow: "0px 0px 8px #a9d4de",
           }}
           whileTap={{ backgroundColor: "#E4E0E1" }}
-          className="absolute cursor-pointer rounded-full top-4 left-4 p-2"
+          className="absolute cursor-pointer rounded-full top-10 left-10 p-2"
         >
           <input
             ref={fileInputRef}
@@ -408,6 +408,7 @@ function App() {
                       } to-transparent bottom-4 w-full left-0 text-center text-black text-xl`}
                     >
                       {formMsg}
+                      
                     </div>
                   )}
                 </div>
@@ -448,7 +449,7 @@ function App() {
               <tbody>
                 {tableData.map((obj, i) => (
                   <motion.tr
-                  style={{cursor:"pointer"}}
+                    style={{ cursor: "pointer" }}
                     whileTap={{ scale: 1.01 }}
                     variants={rowVariants}
                     initial="start"
